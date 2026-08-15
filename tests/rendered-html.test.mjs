@@ -16,6 +16,9 @@ test("renders the focused Lichterfelde opportunity demo", async () => {
   assert.match(page, /Lichterfelde, Berlin/);
   assert.match(page, /Vacant plots only/);
   assert.match(page, /Underutilised plots/);
+  assert.match(page, /Street — excluded/);
+  assert.match(page, /Residential candidate/);
+  assert.match(page, /streetOverlapShare/);
   assert.match(page, /Heat map/);
   assert.match(page, /Apartment units/);
   assert.match(page, /Update potential/);
@@ -43,6 +46,8 @@ test("maps real capacity fields and exposes source caveats", async () => {
   const [page, mapApi] = await Promise.all([readFile(pageUrl, "utf8"), readFile(mapApiUrl, "utf8")]);
   assert.match(page, /\/api\/parcels\/map/);
   assert.match(page, /lichterfelde-alkis-buildings\.geojson/);
+  assert.match(page, /lichterfelde-land-use-screen\.json/);
+  assert.match(page, /capacityStatus/);
   assert.match(page, /remainingFloorAreaSqm/);
   assert.match(page, /maxLegalFloorAreaSqm/);
   assert.match(page, /legalGfz/);
@@ -55,6 +60,11 @@ test("maps real capacity fields and exposes source caveats", async () => {
   assert.match(mapApi, /estimatedFloorAreaSqm/);
   assert.match(mapApi, /remainingFloorAreaSqm/);
   assert.match(mapApi, /controllingPlanKeys/);
+  assert.match(mapApi, /land_use_eligibility_screen/);
+  assert.match(mapApi, /qgis_exact_polygon_overlap_v1/);
+  assert.match(mapApi, /vacancyEligible/);
+  assert.match(mapApi, /'street'/);
+  assert.match(mapApi, /'park'/);
 });
 
 test("keeps the demo valuation explicitly assumption-driven", async () => {

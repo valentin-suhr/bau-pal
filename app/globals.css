@@ -116,6 +116,11 @@ svg { width: 21px; height: 21px; fill: none; stroke: currentColor; stroke-width:
 .is-2d .world-aura { inset: 6%; border-radius: 28px; background: rgba(235,243,251,.72); box-shadow: inset 0 0 0 1px rgba(212,226,241,.86); filter: none; }
 .is-2d .world-map { transform: none; }
 .parcel-base { fill: rgba(225,232,240,.72); stroke: rgba(255,255,255,.92); stroke-width: .75; vector-effect: non-scaling-stroke; }
+.parcel-base.use-street { fill: #dce4ec; }
+.parcel-base.use-park { fill: #dcebdd; }
+.parcel-base.use-public_space { fill: #eee8dc; }
+.parcel-base.use-other_or_review, .parcel-base.use-unclassified { fill: #e9edf2; }
+.parcel-base.use-residential_candidate { fill: #e4ebf3; }
 .parcel-base:hover, .parcel-base.selected { fill: #d4e0ed; stroke: #547394; stroke-width: 1.5; }
 .buildings { fill: rgba(255,255,255,.97); stroke: #d6e0eb; stroke-width: .65; pointer-events: none; transition: .25s ease; }
 .buildings.raised { transform: translateY(-2px); }
@@ -149,6 +154,9 @@ svg { width: 21px; height: 21px; fill: none; stroke: currentColor; stroke-width:
 .metric-grid span { display: block; margin-bottom: 3px; color: #8b98aa; font-size: 8px; }
 .metric-grid b { font-size: 11px; }
 .code-line, .empty-state { margin: 10px 2px 0; color: #718097; font-size: 9px; line-height: 1.4; }
+.eligibility-line { margin: 10px 0 0; padding: 7px 9px; border-radius: 9px; font-size: 9px; font-weight: 750; }
+.eligibility-line.eligible { background: #e8f6ee; color: #27724a; }
+.eligibility-line.excluded { background: #eef2f6; color: #68788f; }
 .goals { border-bottom: 0; }
 .goals select { width: 128px; height: 30px; padding: 0 8px; border: 1px solid #dce6f2; border-radius: 8px; background: rgba(250,252,255,.95); color: #40526d; font-size: 10px; outline: 0; }
 .stepper { width: 128px; height: 30px; display: grid; grid-template-columns: 1fr 31px 31px; border: 1px solid #dce6f2; border-radius: 8px; overflow: hidden; background: rgba(250,252,255,.95); }

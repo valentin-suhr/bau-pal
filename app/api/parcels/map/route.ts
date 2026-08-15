@@ -37,13 +37,14 @@ export async function GET(request: Request) {
   else if (completeness === "partial") where.push(`NOT (${completeCore}) AND (${anyCore})`);
   else if (completeness === "unresolved") where.push(`NOT (${anyCore})`);
   if (["building_footprint_detected", "no_building_footprint_detected"].includes(occupancy ?? "")) { where.push("json_extract(cap.evidence_json,'$.occupancyScreening')=?"); values.push(occupancy as string); }
-  if (capacity === "vacant") where.push("json_extract(cap.evidence_json,'$.occupancyScreening')='no_building_footprint_detected'");
+  if (capacity === "vacant") where.push("json_extract(cap.evidence_json,'$.occupancyScreening')='no_building_footprint_detected' AND json_extract(land.evidence_json,'$.vacancyEligible')=1");
   else if (["under_50", "between_50_80", "over_80"].includes(capacity ?? "")) {
+    where.push("json_extract(land.evidence_json,'$.vacancyEligible')=1");
     where.push("json_extract(cap.evidence_json,'$.occupancyScreening')!='no_building_footprint_detected'");
     where.push("json_extract(cap.evidence_json,'$.apparentGfz') IS NOT NULL AND d.legal_gfz IS NOT NULL");
     where.push(capacity === "under_50" ? "json_extract(cap.evidence_json,'$.apparentGfz')/d.legal_gfz<0.5" : capacity === "between_50_80" ? "json_extract(cap.evidence_json,'$.apparentGfz')/d.legal_gfz>=0.5 AND json_extract(cap.evidence_json,'$.apparentGfz')/d.legal_gfz<0.8" : "json_extract(cap.evidence_json,'$.apparentGfz')/d.legal_gfz>=0.8");
   } else if (capacity === "unassessed") where.push("cap.id IS NULL OR (json_extract(cap.evidence_json,'$.occupancyScreening')!='no_building_footprint_detected' AND (json_extract(cap.evidence_json,'$.apparentGfz') IS NULL OR d.legal_gfz IS NULL))");
-  if (minimumRemainingFloorArea != null) { where.push("json_extract(cap.evidence_json,'$.apparentGfz') IS NOT NULL AND d.max_legal_floor_area_sqm IS NOT NULL AND d.max_legal_floor_area_sqm-json_extract(cap.evidence_json,'$.estimatedFloorAreaSqm')>=?"); values.push(minimumRemainingFloorArea); }
+  if (minimumRemainingFloorArea != null) { where.push("json_extract(land.evidence_json,'$.vacancyEligible')=1 AND json_extract(cap.evidence_json,'$.apparentGfz') IS NOT NULL AND d.max_legal_floor_area_sqm IS NOT NULL AND d.max_legal_floor_area_sqm-json_extract(cap.evidence_json,'$.estimatedFloorAreaSqm')>=?"); values.push(minimumRemainingFloorArea); }
   if (residentialOnly) where.push("EXISTS (SELECT 1 FROM json_each(d.permitted_uses_json) use_filter WHERE lower(use_filter.value) LIKE '%residential%' OR lower(use_filter.value) LIKE '%dwelling%')");
   if (minimumParcelArea != null) { where.push("p.area_sqm>=?"); values.push(minimumParcelArea); }
   if (maximumParcelArea != null) { where.push("p.area_sqm<=?"); values.push(maximumParcelArea); }
@@ -55,6 +56,10 @@ export async function GET(request: Request) {
           WHEN EXISTS (SELECT 1 FROM parcel_heritage_constraints ph WHERE ph.parcel_id=p.id AND ph.relation='nearby_50m') THEN 'heritage_nearby'
           WHEN EXISTS (SELECT 1 FROM sources WHERE source_key='berlin-denkmale-wfs') THEN 'heritage_none'
           ELSE 'heritage_unassessed' END` : mode === "capacity" ? `CASE
+          WHEN land.text_value='street' THEN 'street'
+          WHEN land.text_value='park' THEN 'park'
+          WHEN land.text_value='public_space' THEN 'public_space'
+          WHEN land.text_value IS NOT NULL AND json_extract(land.evidence_json,'$.vacancyEligible')!=1 THEN 'other_or_review'
           WHEN json_extract(cap.evidence_json,'$.occupancyScreening')='no_building_footprint_detected' THEN 'vacant'
           WHEN d.legal_gfz IS NULL OR json_extract(cap.evidence_json,'$.apparentGfz') IS NULL THEN 'unassessed'
           WHEN json_extract(cap.evidence_json,'$.apparentGfz')/d.legal_gfz<0.5 THEN 'high_potential'
@@ -78,12 +83,21 @@ export async function GET(request: Request) {
         json_extract(cap.evidence_json,'$.observedFootprintSqm') AS observed_footprint_sqm,
         json_extract(cap.evidence_json,'$.estimatedFloorAreaSqm') AS estimated_floor_area_sqm,
         json_extract(cap.evidence_json,'$.apparentGfz') AS apparent_gfz,
+        land.text_value AS parcel_use_class,
+        json_extract(land.evidence_json,'$.vacancyEligible') AS vacancy_eligible,
+        json_extract(land.evidence_json,'$.streetOverlapShare') AS street_overlap_share,
+        json_extract(land.evidence_json,'$.parkOverlapShare') AS park_overlap_share,
+        json_extract(land.evidence_json,'$.publicSpaceOverlapShare') AS public_space_overlap_share,
+        json_extract(land.evidence_json,'$.residentialOverlapShare') AS residential_overlap_share,
         EXISTS (SELECT 1 FROM parcel_heritage_constraints ph_hatch WHERE ph_hatch.parcel_id=p.id AND ph_hatch.relation='direct_overlap') AS heritage_direct,
         ${statusCase} AS processing_status
       FROM parcels p JOIN parcel_development_profiles d ON d.parcel_id=p.id
       LEFT JOIN parcel_planning_observations cap ON cap.parcel_id=p.id
         AND cap.observation_type='development_capacity_screen'
         AND cap.extraction_method='exact_alkis_building_parcel_overlap_v1'
+      LEFT JOIN parcel_planning_observations land ON land.parcel_id=p.id
+        AND land.observation_type='land_use_eligibility_screen'
+        AND land.extraction_method='qgis_exact_polygon_overlap_v1'
       WHERE ${where.map((condition) => `(${condition})`).join(" AND ")}
     ), ranked AS (
       SELECT *,row_number() OVER (PARTITION BY processing_status ORDER BY id) AS status_rank,
@@ -97,7 +111,10 @@ export async function GET(request: Request) {
       max_legal_floor_area_sqm AS maxLegalFloorAreaSqm,
       controlling_plan_keys_json AS controllingPlanKeysJson,
       occupancy_screening AS occupancyScreening,observed_footprint_sqm AS observedFootprintSqm,
-      estimated_floor_area_sqm AS estimatedFloorAreaSqm,apparent_gfz AS apparentGfz
+      estimated_floor_area_sqm AS estimatedFloorAreaSqm,apparent_gfz AS apparentGfz,
+      parcel_use_class AS parcelUseClass,vacancy_eligible AS vacancyEligible,
+      street_overlap_share AS streetOverlapShare,park_overlap_share AS parkOverlapShare,
+      public_space_overlap_share AS publicSpaceOverlapShare,residential_overlap_share AS residentialOverlapShare
     FROM ranked ${showAll ? "" : "WHERE status_rank<=?"} ORDER BY processing_status,id`;
   try {
     const result = await env.DB.prepare(query).bind(...values, ...(showAll ? [] : [perStatus])).all();
@@ -118,7 +135,7 @@ export async function GET(request: Request) {
       };
     });
     return Response.json({ parcels, counts, samplingApplied: !showAll, sampledPerStatus: showAll ? null : perStatus, returned: parcels.length, borough, locality, mode, filters: { workflow, completeness, occupancy, capacity, heritage, minimumRemainingFloorArea, minimumParcelArea, maximumParcelArea, residentialOnly },
-      caveat: mode === "heritage" ? "Heritage flags are a spatial cross-reference with the official Berlin Denkmale WFS; nearby status is a review flag, not a legal determination." : mode === "capacity" ? "Capacity compares estimated ALKIS building mass with resolved legal GFZ; it is indicative, not a building-permit determination." : "Processed means the core dashboard fields are populated; it is not a building-permit determination." });
+      caveat: mode === "heritage" ? "Heritage flags are a spatial cross-reference with the official Berlin Denkmale WFS; nearby status is a review flag, not a legal determination." : mode === "capacity" ? "Opportunities are limited to residential candidates after exact QGIS street, park and public-space overlays. Capacity remains indicative, not a building-permit determination." : "Processed means the core dashboard fields are populated; it is not a building-permit determination." });
   } catch (error) {
     return Response.json({ error: "Parcel map query failed", detail: error instanceof Error ? error.message : "Unknown database error" }, { status: 500 });
   }

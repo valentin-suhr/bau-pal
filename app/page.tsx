@@ -13,7 +13,7 @@ type MapParcel = {
   centroidLng: number;
   centroidLat: number;
   geometry: GeoJSONGeometry;
-  processingStatus: "vacant" | "high_potential" | "moderate_potential" | "near_full" | "unassessed";
+  processingStatus: "vacant" | "high_potential" | "moderate_potential" | "near_full" | "unassessed" | "street" | "park" | "public_space" | "other_or_review";
   legalLandUseLabel: string | null;
   legalGrz: number | null;
   legalGfz: number | null;
@@ -26,6 +26,12 @@ type MapParcel = {
   remainingFloorAreaSqm: number | null;
   occupancyScreening: string | null;
   controllingPlanKeys: string[];
+  parcelUseClass: "street" | "park" | "public_space" | "residential_candidate" | "other_or_review" | null;
+  vacancyEligible: number | null;
+  streetOverlapShare: number | null;
+  parkOverlapShare: number | null;
+  publicSpaceOverlapShare: number | null;
+  residentialOverlapShare: number | null;
 };
 
 type MapResponse = {
@@ -33,6 +39,19 @@ type MapResponse = {
   counts: Record<string, number>;
   returned: number;
   caveat: string;
+};
+
+type LandUseScreen = {
+  metadata: { source: string; method: string; dominantShareThreshold: number; crs: string };
+  parcels: Array<{
+    id: string;
+    parcelUseClass: NonNullable<MapParcel["parcelUseClass"]>;
+    vacancyEligible: boolean;
+    streetOverlapShare: number;
+    parkOverlapShare: number;
+    publicSpaceOverlapShare: number;
+    residentialOverlapShare: number;
+  }>;
 };
 
 type BuildingFeatureCollection = {
@@ -61,6 +80,18 @@ const statusLabels: Record<MapParcel["processingStatus"], string> = {
   moderate_potential: "Moderate potential",
   near_full: "Near full potential",
   unassessed: "Capacity unresolved",
+  street: "Street — excluded",
+  park: "Park — excluded",
+  public_space: "Public space — excluded",
+  other_or_review: "Land use review",
+};
+
+const landUseLabels: Record<NonNullable<MapParcel["parcelUseClass"]>, string> = {
+  street: "Street space",
+  park: "Park / green space",
+  public_space: "Public square",
+  residential_candidate: "Residential candidate",
+  other_or_review: "Other land / review",
 };
 
 function fmt(value: number | null | undefined, digits = 0) {
@@ -140,12 +171,31 @@ function basePotential(parcel: MapParcel) {
   return 0.06;
 }
 
+function capacityStatus(parcel: MapParcel): MapParcel["processingStatus"] {
+  if (parcel.occupancyScreening === "no_building_footprint_detected") return "vacant";
+  if (parcel.legalGfz == null || parcel.apparentGfz == null) return "unassessed";
+  const utilisation = parcel.apparentGfz / parcel.legalGfz;
+  if (utilisation < 0.5) return "high_potential";
+  if (utilisation < 0.8) return "moderate_potential";
+  return "near_full";
+}
+
 function potentialColour(score: number) {
   if (score >= 0.82) return "#ff6d16";
   if (score >= 0.6) return "#ff9d24";
   if (score >= 0.38) return "#ffc54b";
   if (score >= 0.16) return "#ffe394";
   return "#e8edf4";
+}
+
+function dominantOverlap(parcel: MapParcel) {
+  const values = [
+    ["street", parcel.streetOverlapShare],
+    ["park", parcel.parkOverlapShare],
+    ["public", parcel.publicSpaceOverlapShare],
+    ["residential", parcel.residentialOverlapShare],
+  ] as Array<[string, number | null]>;
+  return values.reduce((best, current) => (current[1] ?? 0) > (best[1] ?? 0) ? current : best, values[0]);
 }
 
 function Toggle({ checked, onChange, label }: { checked: boolean; onChange: () => void; label: string }) {
@@ -206,13 +256,31 @@ export default function Home() {
         if (!response.ok) throw new Error("ALKIS building layer could not be loaded.");
         return response.json() as Promise<BuildingFeatureCollection>;
       }),
+      fetch("/data/lichterfelde-land-use-screen.json").then((response) => {
+        if (!response.ok) throw new Error("QGIS land-use screen could not be loaded.");
+        return response.json() as Promise<LandUseScreen>;
+      }),
     ])
-      .then(([parcels, buildingLayer]) => {
+      .then(([parcels, buildingLayer, landUseScreen]) => {
         if (cancelled) return;
-        setMapData(parcels);
+        const landByParcel = new Map(landUseScreen.parcels.map((parcel) => [parcel.id, parcel]));
+        const screenedParcels = parcels.parcels.map((parcel) => {
+          const land = landByParcel.get(parcel.id);
+          if (!land) return { ...parcel, processingStatus: "other_or_review" as const };
+          const processingStatus = land.parcelUseClass === "residential_candidate"
+            ? capacityStatus(parcel)
+            : land.parcelUseClass;
+          return { ...parcel, ...land, vacancyEligible: land.vacancyEligible ? 1 : 0, processingStatus };
+        });
+        const counts = screenedParcels.reduce<Record<string, number>>((result, parcel) => {
+          result[parcel.processingStatus] = (result[parcel.processingStatus] ?? 0) + 1;
+          return result;
+        }, {});
+        const screenedMapData = { ...parcels, parcels: screenedParcels, counts };
+        setMapData(screenedMapData);
         setBuildings(buildingLayer);
-        const firstOpportunity = parcels.parcels.find((parcel) => parcel.processingStatus === "vacant")
-          ?? parcels.parcels.find((parcel) => parcel.processingStatus === "high_potential");
+        const firstOpportunity = screenedParcels.find((parcel) => parcel.processingStatus === "vacant")
+          ?? screenedParcels.find((parcel) => parcel.processingStatus === "high_potential");
         setSelectedId(firstOpportunity?.id ?? null);
       })
       .catch((loadError: Error) => !cancelled && setError(loadError.message));
@@ -243,6 +311,7 @@ export default function Home() {
   });
 
   const opportunityCount = (mapData?.counts.vacant ?? 0) + (mapData?.counts.high_potential ?? 0) + (mapData?.counts.moderate_potential ?? 0);
+  const withheldCount = (mapData?.counts.street ?? 0) + (mapData?.counts.park ?? 0) + (mapData?.counts.public_space ?? 0) + (mapData?.counts.other_or_review ?? 0);
   const selectedAdditionalGfa = selected?.remainingFloorAreaSqm
     ?? (selected?.processingStatus === "vacant" ? selected.maxLegalFloorAreaSqm : null);
   const selectedLandValue = selected ? selected.areaSqm * MARKET.landPerSqm : null;
@@ -250,6 +319,7 @@ export default function Home() {
     ? null
     : Math.max(0, selectedAdditionalGfa * (MARKET.completedPerSqm - MARKET.constructionPerSqm) * MARKET.realizationFactor);
   const selectedUnits = selectedAdditionalGfa == null ? null : Math.max(0, Math.floor(selectedAdditionalGfa / 95));
+  const selectedDominantOverlap = selected ? dominantOverlap(selected) : null;
 
   function zoom(factor: number) {
     setViewBox((current) => {
@@ -375,7 +445,7 @@ export default function Home() {
                     <path
                       key={`base-${parcel.id}`}
                       d={path}
-                      className={`parcel-base ${selectedId === parcel.id ? "selected" : ""}`}
+                      className={`parcel-base use-${parcel.parcelUseClass ?? "unclassified"} ${selectedId === parcel.id ? "selected" : ""}`}
                       onClick={(event) => { event.stopPropagation(); setSelectedId(parcel.id); setAnalysisTab("analysis"); }}
                     >
                       <title>{`${statusLabels[parcel.processingStatus]} · ${fmt(parcel.areaSqm)} m²`}</title>
@@ -402,7 +472,7 @@ export default function Home() {
                 </g>
               </svg>
             </div>
-            <p className="map-caption"><b>{fmt(opportunityCount)}</b> screened opportunities across <b>{fmt(mapData?.returned)}</b> ALKIS parcels</p>
+            <p className="map-caption"><b>{fmt(opportunityCount)}</b> screened opportunities · <b>{fmt(withheldCount)}</b> non-building or review parcels withheld</p>
           </section>
 
           <aside className="control-panel" id="analysis">
@@ -433,6 +503,10 @@ export default function Home() {
                         <div><span>Legal GFZ / GRZ</span><b>{fmt(selected.legalGfz, 2)} / {fmt(selected.legalGrz, 2)}</b></div>
                         <div><span>Max storeys</span><b>{fmt(selected.legalStoreysMax)}</b></div>
                       </div>
+                      <p className={`eligibility-line ${selected.vacancyEligible ? "eligible" : "excluded"}`}>
+                        {selected.parcelUseClass ? landUseLabels[selected.parcelUseClass] : "Land-use screen unavailable"}
+                        {selectedDominantOverlap && (selectedDominantOverlap[1] ?? 0) > 0 ? ` · ${fmt((selectedDominantOverlap[1] ?? 0) * 100)}% ${selectedDominantOverlap[0]} overlap` : ""}
+                      </p>
                       <p className="code-line">{selected.legalLandUseLabel ?? "Land use unresolved"}{selected.controllingPlanKeys.length ? ` · ${selected.controllingPlanKeys.join(", ")}` : ""}</p>
                     </>
                   ) : <p className="empty-state">Click an orange parcel to inspect its evidence.</p>}
@@ -471,14 +545,14 @@ export default function Home() {
         {toolPanel && toolPanel !== "share" ? (
           <div className="tool-popover">
             <button className="popover-close" onClick={() => setToolPanel(null)}>×</button>
-            {toolPanel === "layers" && <><b>Visible map layers</b><p>ALKIS parcels · ALKIS buildings · development-capacity screening{zoningOverlay ? " · planning evidence" : ""}</p></>}
+            {toolPanel === "layers" && <><b>Visible map layers</b><p>ALKIS parcels · ALKIS buildings · QGIS streets, parks, public space and residential land · development-capacity screening{zoningOverlay ? " · planning evidence" : ""}</p></>}
             {toolPanel === "filters" && <><b>Current opportunity filter</b><p>{vacantOnly ? "Vacant" : ""}{vacantOnly && underutilised ? " + " : ""}{underutilised ? "underutilised" : "All parcels"} · target {applied.units} homes · {applied.stories} storeys</p></>}
             {toolPanel === "codes" && <><b>Planning evidence</b><p>{selected ? `${selected.legalLandUseLabel ?? "Use unresolved"}; GFZ ${fmt(selected.legalGfz, 2)}; GRZ ${fmt(selected.legalGrz, 2)}; ${fmt(selected.legalStoreysMax)} storeys.` : "Select a parcel to view its resolved planning fields."}</p></>}
           </div>
         ) : null}
 
         <footer id="data">
-          <span><b>Evidence:</b> Berlin ALKIS parcels and buildings · resolved B-Plan / Baunutzungsplan profiles</span>
+          <span><b>Evidence:</b> Berlin ALKIS parcels and buildings · user-provided QGIS land-use layers · resolved B-Plan / Baunutzungsplan profiles</span>
           <span>Planning and capacity values are screening evidence, not legal advice. Market values are imputed for this demo.</span>
         </footer>
         {notice && <div className="toast" role="status">{notice}</div>}
