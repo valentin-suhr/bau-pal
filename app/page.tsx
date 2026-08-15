@@ -1,209 +1,498 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { PointerEvent as ReactPointerEvent, ReactNode, useEffect, useMemo, useRef, useState } from "react";
 
-type Plot = {
-  id: number;
-  district: string;
-  address: string;
-  area: number;
-  units: number;
-  floors: string;
-  status: "Available" | "Review";
-  type: string;
-  cost: number;
-  x: number;
-  y: number;
-  shape: string;
-  score: number;
+type GeoJSONGeometry = {
+  type: "Polygon" | "MultiPolygon";
+  coordinates: number[][][] | number[][][][];
 };
 
-const plots: Plot[] = [
-  { id: 1, district: "Lichtenberg", address: "Siegfriedstraße 18", area: 1280, units: 18, floors: "IV + attic", status: "Available", type: "Closing a gap", cost: 8.2, x: 77, y: 52, shape: "M0 5 L32 0 L40 28 L8 36 Z", score: 92 },
-  { id: 2, district: "Pankow", address: "Prenzlauer Promenade 42", area: 940, units: 13, floors: "IV", status: "Available", type: "Corner plot", cost: 6.1, x: 57, y: 23, shape: "M0 0 L36 7 L30 38 L4 32 Z", score: 86 },
-  { id: 3, district: "Neukölln", address: "Britzer Damm 106", area: 1650, units: 22, floors: "III + attic", status: "Review", type: "Rear lot", cost: 9.6, x: 54, y: 75, shape: "M4 0 L36 3 L40 32 L0 38 Z", score: 79 },
-  { id: 4, district: "Spandau", address: "Pichelsdorfer Straße 71", area: 2130, units: 28, floors: "IV", status: "Available", type: "Former commercial", cost: 13.4, x: 15, y: 50, shape: "M0 5 L38 0 L35 35 L7 39 Z", score: 83 },
-  { id: 5, district: "Treptow-Köpenick", address: "Köpenicker Landstraße 94", area: 1180, units: 16, floors: "III", status: "Review", type: "Infill", cost: 7.1, x: 76, y: 78, shape: "M5 0 L40 8 L32 38 L0 30 Z", score: 74 },
-  { id: 6, district: "Reinickendorf", address: "Residenzstraße 126", area: 760, units: 10, floors: "IV", status: "Available", type: "Closing a gap", cost: 4.8, x: 34, y: 19, shape: "M0 0 L31 4 L38 35 L5 39 Z", score: 88 },
-];
+type MapParcel = {
+  id: string;
+  areaSqm: number;
+  centroidLng: number;
+  centroidLat: number;
+  geometry: GeoJSONGeometry;
+  processingStatus: "vacant" | "high_potential" | "moderate_potential" | "near_full" | "unassessed";
+  legalLandUseLabel: string | null;
+  legalGrz: number | null;
+  legalGfz: number | null;
+  legalStoreysMax: number | null;
+  buildingForm: string | null;
+  maxLegalFloorAreaSqm: number | null;
+  observedFootprintSqm: number | null;
+  estimatedFloorAreaSqm: number | null;
+  apparentGfz: number | null;
+  remainingFloorAreaSqm: number | null;
+  occupancyScreening: string | null;
+  controllingPlanKeys: string[];
+};
 
-function money(value: number) {
-  return new Intl.NumberFormat("de-DE", { style: "currency", currency: "EUR", maximumFractionDigits: 1 }).format(value);
+type MapResponse = {
+  parcels: MapParcel[];
+  counts: Record<string, number>;
+  returned: number;
+  caveat: string;
+};
+
+type BuildingFeatureCollection = {
+  type: "FeatureCollection";
+  metadata: { buildingCount: number; sourceTitle: string; sourceUrl: string; sourceUpdatedAt: string | null };
+  features: Array<{ id: string; geometry: GeoJSONGeometry; properties: { storeys: number | null } }>;
+};
+
+type Bounds = { west: number; east: number; south: number; north: number };
+type ViewMode = "2d" | "3d";
+type AnalysisTab = "analysis" | "build";
+type ToolPanel = "layers" | "filters" | "codes" | "share" | null;
+
+const WORLD_WIDTH = 1000;
+const WORLD_HEIGHT = 740;
+const MARKET = {
+  landPerSqm: 1100,
+  completedPerSqm: 5600,
+  constructionPerSqm: 3400,
+  realizationFactor: 0.62,
+};
+
+const statusLabels: Record<MapParcel["processingStatus"], string> = {
+  vacant: "Vacant",
+  high_potential: "High potential",
+  moderate_potential: "Moderate potential",
+  near_full: "Near full potential",
+  unassessed: "Capacity unresolved",
+};
+
+function fmt(value: number | null | undefined, digits = 0) {
+  return value == null || !Number.isFinite(value)
+    ? "—"
+    : new Intl.NumberFormat("en-GB", { maximumFractionDigits: digits }).format(value);
 }
 
-function Icon({ children }: { children: React.ReactNode }) {
-  return <span className="icon" aria-hidden="true">{children}</span>;
+function money(value: number | null | undefined) {
+  if (value == null || !Number.isFinite(value)) return "—";
+  return new Intl.NumberFormat("en-GB", {
+    style: "currency",
+    currency: "EUR",
+    notation: value >= 1_000_000 ? "compact" : "standard",
+    maximumFractionDigits: value >= 1_000_000 ? 1 : 0,
+  }).format(value);
+}
+
+function geometryRings(geometry: GeoJSONGeometry) {
+  return geometry.type === "Polygon"
+    ? [(geometry.coordinates as number[][][])[0]]
+    : (geometry.coordinates as number[][][][]).map((polygon) => polygon[0]);
+}
+
+function calculateBounds(geometries: Array<{ geometry: GeoJSONGeometry }>): Bounds | null {
+  let west = Infinity;
+  let east = -Infinity;
+  let south = Infinity;
+  let north = -Infinity;
+  for (const item of geometries) {
+    for (const ring of geometryRings(item.geometry)) {
+      for (const point of ring) {
+        if (point[0] < west) west = point[0];
+        if (point[0] > east) east = point[0];
+        if (point[1] < south) south = point[1];
+        if (point[1] > north) north = point[1];
+      }
+    }
+  }
+  return Number.isFinite(west) ? { west, east, south, north } : null;
+}
+
+function geometryPath(geometry: GeoJSONGeometry, bounds: Bounds | null) {
+  if (!bounds) return "";
+  const padding = 24;
+  const latitude = (bounds.north + bounds.south) / 2;
+  const longitudeScale = Math.cos((latitude * Math.PI) / 180);
+  const geographicWidth = Math.max((bounds.east - bounds.west) * longitudeScale, 0.00001);
+  const geographicHeight = Math.max(bounds.north - bounds.south, 0.00001);
+  const scale = Math.min(
+    (WORLD_WIDTH - padding * 2) / geographicWidth,
+    (WORLD_HEIGHT - padding * 2) / geographicHeight,
+  );
+  const renderedWidth = geographicWidth * scale;
+  const renderedHeight = geographicHeight * scale;
+  const offsetX = (WORLD_WIDTH - renderedWidth) / 2;
+  const offsetY = (WORLD_HEIGHT - renderedHeight) / 2;
+
+  return geometryRings(geometry)
+    .map((ring) =>
+      ring
+        .map((point, index) => {
+          const x = offsetX + (point[0] - bounds.west) * longitudeScale * scale;
+          const y = offsetY + renderedHeight - (point[1] - bounds.south) * scale;
+          return `${index === 0 ? "M" : "L"}${x.toFixed(2)} ${y.toFixed(2)}`;
+        })
+        .join(" ") + " Z",
+    )
+    .join(" ");
+}
+
+function basePotential(parcel: MapParcel) {
+  if (parcel.processingStatus === "vacant") return 1;
+  if (parcel.processingStatus === "high_potential") return 0.86;
+  if (parcel.processingStatus === "moderate_potential") return 0.58;
+  if (parcel.processingStatus === "near_full") return 0.18;
+  return 0.06;
+}
+
+function potentialColour(score: number) {
+  if (score >= 0.82) return "#ff6d16";
+  if (score >= 0.6) return "#ff9d24";
+  if (score >= 0.38) return "#ffc54b";
+  if (score >= 0.16) return "#ffe394";
+  return "#e8edf4";
+}
+
+function Toggle({ checked, onChange, label }: { checked: boolean; onChange: () => void; label: string }) {
+  return (
+    <button className={`switch ${checked ? "on" : ""}`} onClick={onChange} aria-pressed={checked} aria-label={label}>
+      <span />
+    </button>
+  );
+}
+
+function Icon({ name }: { name: "search" | "bell" | "layers" | "filter" | "codes" | "share" | "folder" | "plus" | "minus" | "reset" }) {
+  const paths: Record<typeof name, ReactNode> = {
+    search: <><circle cx="10.5" cy="10.5" r="6"/><path d="m15 15 4 4"/></>,
+    bell: <><path d="M7 9a5 5 0 0 1 10 0c0 6 2.5 6 2.5 6h-15S7 15 7 9Z"/><path d="M10 19h4"/></>,
+    layers: <><path d="m12 3 8 4-8 4-8-4 8-4Z"/><path d="m4 12 8 4 8-4M4 17l8 4 8-4"/></>,
+    filter: <path d="M4 5h16l-6.5 7.3V19l-3 1v-7.7L4 5Z"/>,
+    codes: <><rect x="5" y="3" width="14" height="18" rx="2"/><path d="M9 8h6M9 12h6M9 16h4"/></>,
+    share: <><circle cx="18" cy="5" r="2.5"/><circle cx="6" cy="12" r="2.5"/><circle cx="18" cy="19" r="2.5"/><path d="m8.3 10.8 7.4-4.5m-7.4 6.9 7.4 4.5"/></>,
+    folder: <path d="M3 7h7l2 2h9v10H3V7Z"/>,
+    plus: <path d="M12 5v14M5 12h14"/>,
+    minus: <path d="M5 12h14"/>,
+    reset: <><path d="M5 8a8 8 0 1 1-1 7"/><path d="M5 3v5H1"/></>,
+  };
+  return <svg viewBox="0 0 24 24" aria-hidden="true">{paths[name]}</svg>;
 }
 
 export default function Home() {
-  const [selectedId, setSelectedId] = useState(1);
-  const [desiredUnits, setDesiredUnits] = useState(16);
-  const [budget, setBudget] = useState(9);
-  const [panelOpen, setPanelOpen] = useState(true);
-  const [saved, setSaved] = useState<number[]>([]);
-  const [search, setSearch] = useState("");
-  const [showAvailable, setShowAvailable] = useState(true);
+  const [mapData, setMapData] = useState<MapResponse | null>(null);
+  const [buildings, setBuildings] = useState<BuildingFeatureCollection | null>(null);
+  const [error, setError] = useState<string | null>(null);
+  const [selectedId, setSelectedId] = useState<string | null>(null);
+  const [viewMode, setViewMode] = useState<ViewMode>("3d");
+  const [analysisTab, setAnalysisTab] = useState<AnalysisTab>("analysis");
+  const [toolPanel, setToolPanel] = useState<ToolPanel>(null);
+  const [vacantOnly, setVacantOnly] = useState(true);
+  const [underutilised, setUnderutilised] = useState(true);
+  const [heatMap, setHeatMap] = useState(true);
+  const [buildingHeight, setBuildingHeight] = useState(true);
+  const [zoningOverlay, setZoningOverlay] = useState(false);
+  const [units, setUnits] = useState(12);
+  const [stories, setStories] = useState(4);
+  const [usage, setUsage] = useState("Residential");
+  const [buildingType, setBuildingType] = useState("Multi-family");
+  const [parking, setParking] = useState(8);
+  const [applied, setApplied] = useState({ units: 12, stories: 4, usage: "Residential", buildingType: "Multi-family", parking: 8 });
+  const [notice, setNotice] = useState<string | null>(null);
+  const [viewBox, setViewBox] = useState({ x: 0, y: 0, width: WORLD_WIDTH, height: WORLD_HEIGHT });
+  const dragRef = useRef<{ x: number; y: number; viewX: number; viewY: number } | null>(null);
 
-  const selected = plots.find((plot) => plot.id === selectedId) ?? plots[0];
-  const filtered = useMemo(() => plots.filter((plot) => {
-    const textMatch = `${plot.district} ${plot.address}`.toLowerCase().includes(search.toLowerCase());
-    return textMatch && (!showAvailable || plot.status === "Available");
-  }), [search, showAvailable]);
+  useEffect(() => {
+    let cancelled = false;
+    Promise.all([
+      fetch("/api/parcels/map?borough=Steglitz-Zehlendorf&locality=Lichterfelde&all=true&mode=capacity").then((response) => {
+        if (!response.ok) throw new Error("Parcel database could not be reached.");
+        return response.json() as Promise<MapResponse>;
+      }),
+      fetch("/data/lichterfelde-alkis-buildings.geojson").then((response) => {
+        if (!response.ok) throw new Error("ALKIS building layer could not be loaded.");
+        return response.json() as Promise<BuildingFeatureCollection>;
+      }),
+    ])
+      .then(([parcels, buildingLayer]) => {
+        if (cancelled) return;
+        setMapData(parcels);
+        setBuildings(buildingLayer);
+        const firstOpportunity = parcels.parcels.find((parcel) => parcel.processingStatus === "vacant")
+          ?? parcels.parcels.find((parcel) => parcel.processingStatus === "high_potential");
+        setSelectedId(firstOpportunity?.id ?? null);
+      })
+      .catch((loadError: Error) => !cancelled && setError(loadError.message));
+    return () => { cancelled = true; };
+  }, []);
 
-  const fit = selected.units - desiredUnits;
-  const totalCost = selected.cost + Math.max(0, desiredUnits - selected.units) * 0.23;
-  const perHousehold = totalCost * 1_000_000 / desiredUnits;
-  const budgetFit = totalCost <= budget;
+  const parcels = useMemo(() => mapData?.parcels ?? [], [mapData]);
+  const bounds = useMemo(() => calculateBounds(parcels), [parcels]);
+  const selected = useMemo(() => parcels.find((parcel) => parcel.id === selectedId) ?? null, [parcels, selectedId]);
+  const parcelPaths = useMemo(() => parcels.map((parcel) => ({ parcel, path: geometryPath(parcel.geometry, bounds) })), [parcels, bounds]);
+  const buildingPath = useMemo(() => {
+    if (!buildings || !bounds) return "";
+    return buildings.features.map((feature) => geometryPath(feature.geometry, bounds)).join(" ");
+  }, [buildings, bounds]);
+
+  const requiredFloorArea = applied.units * 95;
+  const scenarioScore = (parcel: MapParcel) => {
+    const available = parcel.remainingFloorAreaSqm ?? (parcel.processingStatus === "vacant" ? parcel.maxLegalFloorAreaSqm : null);
+    const capacityFit = available == null ? 0 : Math.min(1, available / Math.max(1, requiredFloorArea));
+    const storeyFit = parcel.legalStoreysMax == null ? 0.4 : parcel.legalStoreysMax >= applied.stories ? 1 : 0.3;
+    return Math.min(1, basePotential(parcel) * 0.58 + capacityFit * 0.3 + storeyFit * 0.12);
+  };
+
+  const visibleParcels = parcelPaths.filter(({ parcel }) => {
+    if (parcel.processingStatus === "vacant") return vacantOnly;
+    if (parcel.processingStatus === "high_potential" || parcel.processingStatus === "moderate_potential") return underutilised;
+    return !vacantOnly && !underutilised;
+  });
+
+  const opportunityCount = (mapData?.counts.vacant ?? 0) + (mapData?.counts.high_potential ?? 0) + (mapData?.counts.moderate_potential ?? 0);
+  const selectedAdditionalGfa = selected?.remainingFloorAreaSqm
+    ?? (selected?.processingStatus === "vacant" ? selected.maxLegalFloorAreaSqm : null);
+  const selectedLandValue = selected ? selected.areaSqm * MARKET.landPerSqm : null;
+  const selectedPotentialValue = selectedAdditionalGfa == null
+    ? null
+    : Math.max(0, selectedAdditionalGfa * (MARKET.completedPerSqm - MARKET.constructionPerSqm) * MARKET.realizationFactor);
+  const selectedUnits = selectedAdditionalGfa == null ? null : Math.max(0, Math.floor(selectedAdditionalGfa / 95));
+
+  function zoom(factor: number) {
+    setViewBox((current) => {
+      const width = Math.min(WORLD_WIDTH, Math.max(220, current.width * factor));
+      const height = width * (WORLD_HEIGHT / WORLD_WIDTH);
+      return {
+        x: Math.max(0, Math.min(WORLD_WIDTH - width, current.x + (current.width - width) / 2)),
+        y: Math.max(0, Math.min(WORLD_HEIGHT - height, current.y + (current.height - height) / 2)),
+        width,
+        height,
+      };
+    });
+  }
+
+  function startDrag(event: ReactPointerEvent<SVGSVGElement>) {
+    event.currentTarget.setPointerCapture(event.pointerId);
+    dragRef.current = { x: event.clientX, y: event.clientY, viewX: viewBox.x, viewY: viewBox.y };
+  }
+
+  function moveDrag(event: ReactPointerEvent<SVGSVGElement>) {
+    if (!dragRef.current) return;
+    const rect = event.currentTarget.getBoundingClientRect();
+    const dx = ((event.clientX - dragRef.current.x) / rect.width) * viewBox.width;
+    const dy = ((event.clientY - dragRef.current.y) / rect.height) * viewBox.height;
+    setViewBox((current) => ({
+      ...current,
+      x: Math.max(0, Math.min(WORLD_WIDTH - current.width, dragRef.current!.viewX - dx)),
+      y: Math.max(0, Math.min(WORLD_HEIGHT - current.height, dragRef.current!.viewY - dy)),
+    }));
+  }
+
+  function resetView() {
+    setViewBox({ x: 0, y: 0, width: WORLD_WIDTH, height: WORLD_HEIGHT });
+  }
+
+  function updatePotential() {
+    setApplied({ units, stories, usage, buildingType, parking });
+    setNotice("Potential scores updated for your building brief.");
+    window.setTimeout(() => setNotice(null), 2600);
+  }
+
+  async function shareDemo() {
+    try {
+      await navigator.clipboard.writeText(window.location.href);
+      setNotice("Demo link copied.");
+    } catch {
+      setNotice("Share this page from your browser address bar.");
+    }
+    window.setTimeout(() => setNotice(null), 2600);
+  }
 
   return (
-    <main>
-      <header className="topbar">
-        <a className="brand" href="#" aria-label="Grounded home">
-          <span className="brandmark"><span /></span>
-          <span>Grounded</span>
-        </a>
-        <nav aria-label="Primary navigation">
-          <button className="navlink active">Explore</button>
-          <button className="navlink">How it works</button>
-          <button className="navlink">About the data</button>
-        </nav>
-        <div className="header-actions">
-          <button className="icon-button" aria-label="Saved plots"><Icon>♡</Icon><span className="save-count">{saved.length}</span></button>
-          <button className="avatar" aria-label="Open profile">VS</button>
-        </div>
-      </header>
+    <main className="site-canvas">
+      <section className="dashboard-shell">
+        <header className="top-nav">
+          <a className="wordmark" href="#" aria-label="bau pal home">bau pal</a>
+          <nav aria-label="Primary navigation">
+            <a className="active" href="#explore">Explore</a>
+            <a href="#analysis">Analyze</a>
+            <a href="#projects">Projects</a>
+            <a href="#data">Data</a>
+            <a href="#about">About</a>
+          </nav>
+          <div className="nav-actions">
+            <button aria-label="Search"><Icon name="search" /></button>
+            <button aria-label="Notifications"><Icon name="bell" /></button>
+            <span className="avatar">V</span>
+          </div>
+        </header>
 
-      <section className="workspace">
-        <aside className={`sidebar ${panelOpen ? "" : "collapsed"}`}>
-          <div className="sidebar-head">
-            <div>
-              <p className="eyebrow">PLOT FINDER</p>
-              <h1>Find ground for<br />your shared future.</h1>
+        <div className="workspace" id="explore">
+          <aside className="intro-panel">
+            <label className="location-label" htmlFor="place">Location</label>
+            <select id="place" className="location-select" defaultValue="lichterfelde">
+              <option value="lichterfelde">Lichterfelde, Berlin</option>
+              <option disabled>Steglitz, Berlin · coming soon</option>
+              <option disabled>Hamburg · coming soon</option>
+              <option disabled>Munich · coming soon</option>
+            </select>
+            <h1>Find potential.<br />Build <em>together.</em></h1>
+            <p className="lede">Explore vacant or underutilised plots and see what your group could build — based on local planning evidence.</p>
+            <button className="primary-action" onClick={() => setNotice("New project started with the current Lichterfelde brief.")}><Icon name="plus" /> New project</button>
+            <button className="text-action" onClick={() => setNotice("Project loading is ready for the next demo iteration.")}><Icon name="folder" /> Load project</button>
+
+            <div className="legend-card">
+              <div><span>Development potential</span><button title="Potential combines legal capacity and your building brief.">i</button></div>
+              <div className="gradient" />
+              <div className="legend-range"><span>Low</span><span>High</span></div>
             </div>
-            <button className="close-mobile" onClick={() => setPanelOpen(false)} aria-label="Close filters">×</button>
-          </div>
-          <p className="intro">Explore potentially vacant or underused plots in Berlin and test what your group could build.</p>
+          </aside>
 
-          <label className="searchbox">
-            <Icon>⌕</Icon>
-            <input value={search} onChange={(e) => setSearch(e.target.value)} placeholder="District, street or postcode" />
-            <kbd>⌘ K</kbd>
-          </label>
+          <section className="map-stage" aria-label="Interactive Lichterfelde development potential map">
+            <div className="view-toggle" aria-label="Map view">
+              <button className={viewMode === "2d" ? "active" : ""} onClick={() => setViewMode("2d")}>2D</button>
+              <button className={viewMode === "3d" ? "active" : ""} onClick={() => setViewMode("3d")}>3D</button>
+            </div>
+            <div className="compass"><b>N</b><span>⌃</span></div>
+            <div className="zoom-controls">
+              <button onClick={() => zoom(0.74)} aria-label="Zoom in"><Icon name="plus" /></button>
+              <button onClick={() => zoom(1.35)} aria-label="Zoom out"><Icon name="minus" /></button>
+              <button onClick={resetView} aria-label="Reset map"><Icon name="reset" /></button>
+            </div>
 
-          <div className="result-line">
-            <span><strong>{filtered.length}</strong> potential plots</span>
-            <button>Sort: Best fit <span>⌄</span></button>
-          </div>
-
-          <div className="filters">
-            <button className={showAvailable ? "filter active" : "filter"} onClick={() => setShowAvailable(!showAvailable)}>
-              <span className="filter-icon">◎</span> Available now
-            </button>
-            <button className="filter"><span className="filter-icon">▱</span> 700–2,200 m² <span>⌄</span></button>
-            <button className="filter"><span className="filter-icon">▥</span> 10+ units <span>⌄</span></button>
-          </div>
-
-          <div className="plot-list">
-            {filtered.map((plot) => (
-              <button key={plot.id} className={`plot-card ${plot.id === selectedId ? "selected" : ""}`} onClick={() => setSelectedId(plot.id)}>
-                <div className="plot-card-top">
-                  <span className={`status ${plot.status === "Review" ? "review" : ""}`}><i />{plot.status}</span>
-                  <span className="score">{plot.score}% match</span>
-                </div>
-                <h2>{plot.address}</h2>
-                <p>{plot.district} · Berlin</p>
-                <div className="card-metrics">
-                  <span><b>{plot.area.toLocaleString("de-DE")}</b> m² plot</span>
-                  <span><b>~{plot.units}</b> units</span>
-                  <span><b>{money(plot.cost)}</b>m est.</span>
-                </div>
-              </button>
-            ))}
-            {filtered.length === 0 && <div className="empty">No exact matches. Try another district or clear a filter.</div>}
-          </div>
-          <p className="data-note"><Icon>ⓘ</Icon> Screening data, not a legal building assessment. Always verify ownership and planning law.</p>
-        </aside>
-
-        <section className="map-area" aria-label="Interactive map of Berlin plots">
-          <div className="map-paper">
-            <div className="district d1">REINICKENDORF</div><div className="district d2">PANKOW</div>
-            <div className="district d3">SPANDAU</div><div className="district d4">MITTE</div>
-            <div className="district d5">LICHTENBERG</div><div className="district d6">CHARLOTTENBURG</div>
-            <div className="district d7">TEMPELHOF</div><div className="district d8">NEUKÖLLN</div>
-            <div className="district d9">TREPTOW–KÖPENICK</div>
-            <div className="river river1" /><div className="river river2" />
-            <div className="road r1" /><div className="road r2" /><div className="road r3" /><div className="road r4" /><div className="road r5" />
-            <div className="park p1" /><div className="park p2" /><div className="park p3" />
-            {filtered.map((plot, index) => (
-              <button
-                key={plot.id}
-                className={`map-marker ${selectedId === plot.id ? "selected" : ""}`}
-                style={{ left: `${plot.x}%`, top: `${plot.y}%` }}
-                onClick={() => setSelectedId(plot.id)}
-                aria-label={`Select ${plot.address}`}
+            <div className={`micro-world ${viewMode === "3d" ? "is-3d" : "is-2d"}`}>
+              <div className="world-aura" />
+              {error ? <div className="map-message error">{error}</div> : !mapData ? <div className="map-message">Loading the Lichterfelde evidence layer…</div> : null}
+              <svg
+                className="world-map"
+                viewBox={`${viewBox.x} ${viewBox.y} ${viewBox.width} ${viewBox.height}`}
+                onPointerDown={startDrag}
+                onPointerMove={moveDrag}
+                onPointerUp={() => { dragRef.current = null; }}
+                onPointerCancel={() => { dragRef.current = null; }}
+                onWheel={(event) => { event.preventDefault(); zoom(event.deltaY > 0 ? 1.12 : 0.88); }}
               >
-                <span>{index + 1}</span>
-              </button>
-            ))}
-          </div>
-          <div className="map-tools">
-            <button aria-label="Zoom in">+</button><button aria-label="Zoom out">−</button><button aria-label="Locate me">⌾</button>
-          </div>
-          <button className="filter-toggle" onClick={() => setPanelOpen(true)}><Icon>☷</Icon> Filters</button>
-          <div className="map-legend"><span><i className="dot green" />Available</span><span><i className="dot ochre" />Needs review</span><button>Map layers <Icon>▱</Icon></button></div>
+                <defs>
+                  <filter id="buildingShadow" x="-10%" y="-10%" width="120%" height="140%">
+                    <feDropShadow dx="0" dy="4" stdDeviation="3" floodColor="#7890ac" floodOpacity=".28" />
+                  </filter>
+                </defs>
+                <g className="parcel-base-layer">
+                  {parcelPaths.map(({ parcel, path }) => (
+                    <path
+                      key={`base-${parcel.id}`}
+                      d={path}
+                      className={`parcel-base ${selectedId === parcel.id ? "selected" : ""}`}
+                      onClick={(event) => { event.stopPropagation(); setSelectedId(parcel.id); setAnalysisTab("analysis"); }}
+                    >
+                      <title>{`${statusLabels[parcel.processingStatus]} · ${fmt(parcel.areaSqm)} m²`}</title>
+                    </path>
+                  ))}
+                </g>
+                {buildingPath && <path className={`buildings ${buildingHeight ? "raised" : ""}`} d={buildingPath} filter={buildingHeight ? "url(#buildingShadow)" : undefined} />}
+                <g className="parcel-layer">
+                  {visibleParcels.map(({ parcel, path }) => {
+                    const score = scenarioScore(parcel);
+                    const colour = heatMap ? potentialColour(score) : parcel.processingStatus === "vacant" ? "#ff7a1a" : "#ffc44c";
+                    return (
+                      <path
+                        key={parcel.id}
+                        d={path}
+                        className={`parcel ${selectedId === parcel.id ? "selected" : ""} ${zoningOverlay && parcel.legalGfz != null ? "zoned" : ""}`}
+                        style={{ fill: colour }}
+                        onClick={(event) => { event.stopPropagation(); setSelectedId(parcel.id); setAnalysisTab("analysis"); }}
+                      >
+                        <title>{`${statusLabels[parcel.processingStatus]} · ${fmt(parcel.areaSqm)} m² · ${fmt(parcel.remainingFloorAreaSqm)} m² remaining GFA`}</title>
+                      </path>
+                    );
+                  })}
+                </g>
+              </svg>
+            </div>
+            <p className="map-caption"><b>{fmt(opportunityCount)}</b> screened opportunities across <b>{fmt(mapData?.returned)}</b> ALKIS parcels</p>
+          </section>
 
-          <article className="detail-card">
-            <div className="detail-main">
-              <div className="detail-title">
-                <span className={`status ${selected.status === "Review" ? "review" : ""}`}><i />{selected.status}</span>
-                <button
-                  className={saved.includes(selected.id) ? "save saved" : "save"}
-                  onClick={() => setSaved((items) => items.includes(selected.id) ? items.filter((id) => id !== selected.id) : [...items, selected.id])}
-                  aria-label="Save this plot"
-                >{saved.includes(selected.id) ? "♥ Saved" : "♡ Save"}</button>
-                <h2>{selected.address}</h2>
-                <p>{selected.district}, 10{selected.id} Berlin</p>
-              </div>
-              <div className="site-sketch" aria-label="Illustrative plot diagram">
-                <svg viewBox="0 0 190 105" role="img">
-                  <path d="M11 77 L47 12 L173 24 L181 92 L68 99 Z" className="parcel" />
-                  <path d="M54 26 L146 34 L148 75 L75 83 L48 68 Z" className="mass" />
-                  <path d={selected.shape} className="courtyard" transform="translate(87 43)" />
-                  <path d="M55 26 L76 15 M148 34 L160 24 M148 75 L161 84 M75 83 L67 96" className="guide" />
-                  <text x="108" y="67">COURTYARD</text>
-                </svg>
-              </div>
-              <div className="specs">
-                <div><span>Plot area</span><strong>{selected.area.toLocaleString("de-DE")} m²</strong></div>
-                <div><span>Likely floors</span><strong>{selected.floors}</strong></div>
-                <div><span>Typology</span><strong>{selected.type}</strong></div>
-                <div><span>Capacity</span><strong>~{selected.units} homes</strong></div>
-              </div>
+          <aside className="control-panel" id="analysis">
+            <div className="panel-tabs">
+              <button className={analysisTab === "analysis" ? "active" : ""} onClick={() => setAnalysisTab("analysis")}>Analysis</button>
+              <button className={analysisTab === "build" ? "active" : ""} onClick={() => setAnalysisTab("build")}>Build</button>
             </div>
 
-            <div className="calculator">
-              <div className="calc-head"><div><p className="eyebrow">QUICK FEASIBILITY</p><h3>Could your group fit?</h3></div><span className="beta">BETA</span></div>
-              <div className="control-row">
-                <label>Desired homes <strong>{desiredUnits}</strong></label>
-                <input aria-label="Desired number of homes" type="range" min="6" max="30" value={desiredUnits} onChange={(e) => setDesiredUnits(Number(e.target.value))} />
-                <div className="range-labels"><span>6</span><span>30</span></div>
-              </div>
-              <div className="control-row">
-                <label>Group budget <strong>{budget.toFixed(1)}m €</strong></label>
-                <input aria-label="Group budget in millions of euros" type="range" min="4" max="16" step=".5" value={budget} onChange={(e) => setBudget(Number(e.target.value))} />
-                <div className="range-labels"><span>4m €</span><span>16m €</span></div>
-              </div>
-              <div className={`fit-result ${fit < 0 || !budgetFit ? "warning" : ""}`}>
-                <div className="fit-icon">{fit >= 0 && budgetFit ? "✓" : "!"}</div>
-                <div><strong>{fit >= 0 ? `${fit || "Exact"} ${fit === 0 ? "fit" : "homes spare"}` : `${Math.abs(fit)} homes over capacity`}</strong><span>{budgetFit ? "Within your stated group budget" : `${money(totalCost - budget)}m above budget`}</span></div>
-              </div>
-              <div className="cost-line"><span>Rough project cost <small>incl. land + 18% buffer</small></span><strong>{money(totalCost)}m</strong></div>
-              <div className="cost-line"><span>Per household</span><strong>~{money(perHousehold / 1000)}k</strong></div>
-              <button className="primary-action">Open full feasibility <span>→</span></button>
-            </div>
-          </article>
-        </section>
+            {analysisTab === "analysis" ? (
+              <>
+                <section className="control-section">
+                  <h2>What do you want to see?</h2>
+                  <label>Vacant plots only <Toggle label="Show vacant plots" checked={vacantOnly} onChange={() => setVacantOnly((value) => !value)} /></label>
+                  <label>Underutilised plots <Toggle label="Show underutilised plots" checked={underutilised} onChange={() => setUnderutilised((value) => !value)} /></label>
+                  <label>Heat map <Toggle label="Show heat map" checked={heatMap} onChange={() => setHeatMap((value) => !value)} /></label>
+                  <label>Building height <Toggle label="Show building height" checked={buildingHeight} onChange={() => setBuildingHeight((value) => !value)} /></label>
+                  <label>Zoning overlay <Toggle label="Show zoning overlay" checked={zoningOverlay} onChange={() => setZoningOverlay((value) => !value)} /></label>
+                </section>
+
+                <section className="parcel-card">
+                  <div className="parcel-card-head"><span>Selected plot</span><b>{selected ? statusLabels[selected.processingStatus] : "Choose a plot"}</b></div>
+                  {selected ? (
+                    <>
+                      <h3>{selected.id.replaceAll("_", " / ")}</h3>
+                      <div className="metric-grid">
+                        <div><span>Plot area</span><b>{fmt(selected.areaSqm)} m²</b></div>
+                        <div><span>Remaining GFA</span><b>{fmt(selectedAdditionalGfa)} m²</b></div>
+                        <div><span>Legal GFZ / GRZ</span><b>{fmt(selected.legalGfz, 2)} / {fmt(selected.legalGrz, 2)}</b></div>
+                        <div><span>Max storeys</span><b>{fmt(selected.legalStoreysMax)}</b></div>
+                      </div>
+                      <p className="code-line">{selected.legalLandUseLabel ?? "Land use unresolved"}{selected.controllingPlanKeys.length ? ` · ${selected.controllingPlanKeys.join(", ")}` : ""}</p>
+                    </>
+                  ) : <p className="empty-state">Click an orange parcel to inspect its evidence.</p>}
+                </section>
+              </>
+            ) : (
+              <section className="build-summary">
+                <span className="prototype-pill">Prototype estimate</span>
+                <h2>{selectedUnits == null ? "Select a parcel" : `Room for ≈ ${fmt(selectedUnits)} homes`}</h2>
+                <p>Indicative capacity from legal GFZ and estimated existing floor area. Not a permit determination.</p>
+                <div className="value-row"><span>Imputed land value</span><b>{money(selectedLandValue)}</b></div>
+                <div className="value-row"><span>Indicative development upside</span><b>{money(selectedPotentialValue)}</b></div>
+                <small>Demo assumptions: land €{fmt(MARKET.landPerSqm)}/m², completed space €{fmt(MARKET.completedPerSqm)}/m², construction €{fmt(MARKET.constructionPerSqm)}/m². These are imputed placeholders, not trained-model output.</small>
+              </section>
+            )}
+
+            <section className="control-section goals">
+              <h2>Your building goals</h2>
+              <label>Apartment units <Stepper value={units} min={2} max={80} setValue={setUnits} /></label>
+              <label>Storeys (target) <Stepper value={stories} min={1} max={8} setValue={setStories} /></label>
+              <label>Usage <select value={usage} onChange={(event) => setUsage(event.target.value)}><option>Residential</option><option>Mixed use</option><option>Community</option></select></label>
+              <label>Building type <select value={buildingType} onChange={(event) => setBuildingType(event.target.value)}><option>Multi-family</option><option>Courtyard block</option><option>Townhouses</option></select></label>
+              <label>Parking spaces <Stepper value={parking} min={0} max={40} setValue={setParking} /></label>
+              <button className="update-button" onClick={updatePotential}>Update potential</button>
+            </section>
+          </aside>
+        </div>
+
+        <div className="utility-bar">
+          <button className={toolPanel === "layers" ? "active" : ""} onClick={() => setToolPanel(toolPanel === "layers" ? null : "layers")}><Icon name="layers" /><span>Layers</span></button>
+          <button className={toolPanel === "filters" ? "active" : ""} onClick={() => setToolPanel(toolPanel === "filters" ? null : "filters")}><Icon name="filter" /><span>Filters</span></button>
+          <button className={toolPanel === "codes" ? "active" : ""} onClick={() => setToolPanel(toolPanel === "codes" ? null : "codes")}><Icon name="codes" /><span>Codes</span></button>
+          <button onClick={shareDemo}><Icon name="share" /><span>Share</span></button>
+        </div>
+
+        {toolPanel && toolPanel !== "share" ? (
+          <div className="tool-popover">
+            <button className="popover-close" onClick={() => setToolPanel(null)}>×</button>
+            {toolPanel === "layers" && <><b>Visible map layers</b><p>ALKIS parcels · ALKIS buildings · development-capacity screening{zoningOverlay ? " · planning evidence" : ""}</p></>}
+            {toolPanel === "filters" && <><b>Current opportunity filter</b><p>{vacantOnly ? "Vacant" : ""}{vacantOnly && underutilised ? " + " : ""}{underutilised ? "underutilised" : "All parcels"} · target {applied.units} homes · {applied.stories} storeys</p></>}
+            {toolPanel === "codes" && <><b>Planning evidence</b><p>{selected ? `${selected.legalLandUseLabel ?? "Use unresolved"}; GFZ ${fmt(selected.legalGfz, 2)}; GRZ ${fmt(selected.legalGrz, 2)}; ${fmt(selected.legalStoreysMax)} storeys.` : "Select a parcel to view its resolved planning fields."}</p></>}
+          </div>
+        ) : null}
+
+        <footer id="data">
+          <span><b>Evidence:</b> Berlin ALKIS parcels and buildings · resolved B-Plan / Baunutzungsplan profiles</span>
+          <span>Planning and capacity values are screening evidence, not legal advice. Market values are imputed for this demo.</span>
+        </footer>
+        {notice && <div className="toast" role="status">{notice}</div>}
       </section>
     </main>
+  );
+}
+
+function Stepper({ value, min, max, setValue }: { value: number; min: number; max: number; setValue: (value: number) => void }) {
+  return (
+    <span className="stepper">
+      <b>{value}</b>
+      <button onClick={() => setValue(Math.max(min, value - 1))} aria-label="Decrease"><Icon name="minus" /></button>
+      <button onClick={() => setValue(Math.min(max, value + 1))} aria-label="Increase"><Icon name="plus" /></button>
+    </span>
   );
 }

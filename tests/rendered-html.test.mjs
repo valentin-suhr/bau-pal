@@ -1,91 +1,83 @@
 import assert from "node:assert/strict";
-import { access, readFile, readdir } from "node:fs/promises";
+import { readFile } from "node:fs/promises";
 import test from "node:test";
 
-const developmentPreviewMeta =
-  /<meta(?=[^>]*\bname=["']codex-preview["'])(?=[^>]*\bcontent=["']development["'])[^>]*>/i;
-const templateRoot = new URL("../", import.meta.url);
-const previewRoot = new URL("../app/_sites-preview/", import.meta.url);
+const pageUrl = new URL("../app/page.tsx", import.meta.url);
+const cssUrl = new URL("../app/globals.css", import.meta.url);
+const mapApiUrl = new URL("../app/api/parcels/map/route.ts", import.meta.url);
+const exportScriptUrl = new URL("../scripts/export-parcel-table.mjs", import.meta.url);
+const exportAuditUrl = new URL("../scripts/audit-parcel-export.mjs", import.meta.url);
 
-async function render() {
-  const workerUrl = new URL("../dist/server/index.js", import.meta.url);
-  workerUrl.searchParams.set("test", `${process.pid}-${Date.now()}`);
-  const { default: worker } = await import(workerUrl.href);
-
-  return worker.fetch(
-    new Request("http://localhost/", {
-      headers: { accept: "text/html" },
-    }),
-    {
-      ASSETS: {
-        fetch: async () => new Response("Not found", { status: 404 }),
-      },
-    },
-    {
-      waitUntil() {},
-      passThroughOnException() {},
-    },
-  );
-}
-
-test("server-renders the starter loading skeleton", async () => {
-  const response = await render();
-  assert.equal(response.status, 200);
-  assert.match(response.headers.get("content-type") ?? "", /^text\/html\b/i);
-
-  const html = await response.text();
-  assert.match(html, developmentPreviewMeta);
-  assert.match(html, /<title>Your site is taking shape<\/title>/i);
-  assert.match(html, /Building your site/);
-  assert.match(html, /Your site is taking shape/);
-  assert.match(
-    html,
-    /Your first version will appear here automatically when it’s ready\./,
-  );
-  assert.doesNotMatch(html, /Codex/);
-  assert.match(html, /react-loading-skeleton/);
-  assert.match(html, /role="status"/);
+test("renders the focused Lichterfelde opportunity demo", async () => {
+  const page = await readFile(pageUrl, "utf8");
+  assert.match(page, /bau pal/);
+  assert.match(page, /Find potential/);
+  assert.match(page, /Build <em>together/);
+  assert.match(page, /Lichterfelde, Berlin/);
+  assert.match(page, /Vacant plots only/);
+  assert.match(page, /Underutilised plots/);
+  assert.match(page, /Heat map/);
+  assert.match(page, /Apartment units/);
+  assert.match(page, /Update potential/);
+  assert.match(page, /Prototype estimate/);
+  assert.match(page, /imputed placeholders, not trained-model output/);
+  assert.doesNotMatch(page, /heritage|monument/i);
 });
 
-test("keeps the loading skeleton scoped and disposable", async () => {
-  const [preview, css, page, layout, packageJson, files] = await Promise.all([
-    readFile(new URL("SkeletonPreview.tsx", previewRoot), "utf8"),
-    readFile(new URL("preview.css", previewRoot), "utf8"),
-    readFile(new URL("../app/page.tsx", import.meta.url), "utf8"),
-    readFile(new URL("../app/layout.tsx", import.meta.url), "utf8"),
-    readFile(new URL("../package.json", import.meta.url), "utf8"),
-    readdir(previewRoot),
-  ]);
+test("offers a maneuverable 2D and 3D parcel map", async () => {
+  const [page, css] = await Promise.all([readFile(pageUrl, "utf8"), readFile(cssUrl, "utf8")]);
+  assert.match(page, /setViewMode\("2d"\)/);
+  assert.match(page, /setViewMode\("3d"\)/);
+  assert.match(page, /startDrag/);
+  assert.match(page, /moveDrag/);
+  assert.match(page, /onPointerMove/);
+  assert.match(page, /onWheel/);
+  assert.match(page, /Reset map/);
+  assert.match(css, /\.is-3d \.world-map/);
+  assert.match(css, /\.is-2d \.world-map/);
+  assert.match(css, /\.parcel-base/);
+  assert.doesNotMatch(css, /opacity:\s*\.\d+[^}]*confidence/i);
+});
 
-  assert.deepEqual(files.sort(), ["SkeletonPreview.tsx", "preview.css"]);
-  assert.match(preview, /from "react-loading-skeleton"/);
-  assert.match(preview, /baseColor="#eceae7"/);
-  assert.match(preview, /highlightColor="#f9f8f6"/);
-  assert.match(preview, /duration=\{2\.8\}/);
-  assert.match(preview, /sites-skeleton-search-placeholder/);
-  assert.match(packageJson, /"react-loading-skeleton": "3\.5\.0"/);
+test("maps real capacity fields and exposes source caveats", async () => {
+  const [page, mapApi] = await Promise.all([readFile(pageUrl, "utf8"), readFile(mapApiUrl, "utf8")]);
+  assert.match(page, /\/api\/parcels\/map/);
+  assert.match(page, /lichterfelde-alkis-buildings\.geojson/);
+  assert.match(page, /remainingFloorAreaSqm/);
+  assert.match(page, /maxLegalFloorAreaSqm/);
+  assert.match(page, /legalGfz/);
+  assert.match(page, /legalGrz/);
+  assert.match(page, /not legal advice/);
+  assert.match(mapApi, /'vacant'/);
+  assert.match(mapApi, /'high_potential'/);
+  assert.match(mapApi, /'moderate_potential'/);
+  assert.match(mapApi, /maxLegalFloorAreaSqm/);
+  assert.match(mapApi, /estimatedFloorAreaSqm/);
+  assert.match(mapApi, /remainingFloorAreaSqm/);
+  assert.match(mapApi, /controllingPlanKeys/);
+});
 
-  const shellIndex = preview.indexOf('className="sites-skeleton-shell"');
-  const statusIndex = preview.indexOf('className="sites-skeleton-status"');
-  assert.ok(shellIndex >= 0 && statusIndex > shellIndex);
-  assert.match(css, /position:\s*fixed/);
-  assert.match(css, /inset:\s*0/);
-  assert.match(css, /opacity:\s*0\.52/);
-  assert.match(css, /prefers-reduced-motion:\s*reduce/);
-  assert.doesNotMatch(css, /#020617|canvas|pets|progress/i);
-  assert.doesNotMatch(
-    preview,
-    /loading-spinner|status-mark|status-progress|canvas|cookie|random/i,
-  );
+test("keeps the demo valuation explicitly assumption-driven", async () => {
+  const page = await readFile(pageUrl, "utf8");
+  assert.match(page, /const MARKET/);
+  assert.match(page, /landPerSqm/);
+  assert.match(page, /constructionPerSqm/);
+  assert.match(page, /realizationFactor/);
+  assert.match(page, /Imputed land value/);
+  assert.match(page, /Indicative development upside/);
+});
 
-  assert.match(page, /export const metadata:\s*Metadata/);
-  assert.match(page, /"codex-preview": "development"/);
-  assert.match(page, /<SkeletonPreview \/>/);
-  assert.match(layout, /title:\s*"Starter Project"/);
-  assert.doesNotMatch(layout, /codex-preview|_sites-preview|themeColor|\bViewport\b/);
-  assert.doesNotMatch(css, /(^|\s)(html|body)\s*\{/m);
-
-  await assert.rejects(
-    access(new URL("public/_sites-preview", templateRoot)),
-  );
+test("makes scoped CSV exports self-auditing", async () => {
+  const [script, audit] = await Promise.all([readFile(exportScriptUrl, "utf8"), readFile(exportAuditUrl, "utf8")]);
+  assert.match(script, /coverageChecks/);
+  assert.match(script, /rowFoundationComplete/);
+  assert.match(script, /populatedLegalValuesHaveResolutionMethod/);
+  assert.match(script, /complete_core_profile/);
+  assert.match(script, /AS core_completeness/);
+  assert.match(script, /constraint_status/);
+  assert.match(script, /coveragePass/);
+  assert.match(audit, /artifactStatus/);
+  assert.match(audit, /missingColumns/);
+  assert.match(audit, /expectedSchemaVersion/);
+  assert.match(audit, /regenerationCommand/);
 });
