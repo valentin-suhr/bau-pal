@@ -1,0 +1,14 @@
+{
+  "anchorLabel": "Plan coordinate register point X",
+  "anchorPixel": [4186.5, 2919.5],
+  "anchorSoldner": [22429.74, 23572.77],
+  "eastings": [22200, 22300, 22400],
+  "northings": [23800, 23700, 23600, 23500, 23400],
+  "dpi": 200,
+  "planScaleDenominator": 1000,
+  "renderWidth": 8503,
+  "renderHeight": 5356,
+  "cropOrigin": [1500, 500],
+  "estimatedAnchorPixelUncertainty": 3,
+  "maximumEstimatedRegistrationUncertaintyMetres": 1
+}

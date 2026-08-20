@@ -1,0 +1,1 @@
+ALTER TABLE `planning_zone_geometry_reviews` ADD `qa_thresholds_json` text NOT NULL;

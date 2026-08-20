@@ -1,0 +1,1 @@
+ALTER TABLE `planning_rules` ADD `applicability` text DEFAULT 'zone_rule' NOT NULL;

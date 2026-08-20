@@ -1,0 +1,328 @@
+{
+  "type": "FeatureCollection",
+  "schemaVersion": "bplan-georeferenced-zones-v1",
+  "generatedAt": "2026-08-01T14:30:12.270Z",
+  "planKey": "I-8",
+  "sourcePdf": "data/documents/bplans/I-8--plan_sheet.pdf",
+  "sourcePage": 1,
+  "render": {
+    "dpi": 200,
+    "width": 6536,
+    "height": 4600,
+    "renderer": "pdftoppm",
+    "controlGridCrs": "EPSG:3068 DHDN / Soldner Berlin",
+    "controlGridTransform": "+proj=cass +lat_0=52.41864827777778 +lon_0=13.62720366666667 +x_0=40000 +y_0=10000 +ellps=bessel +towgs84=598.1,73.7,418.2,0.202,0.045,-2.455,6.7 +units=m +no_defs"
+  },
+  "controlPoints": [
+    {
+      "label": "25200_22200",
+      "pixel": [
+        2600.719494,
+        3022.787114
+      ],
+      "world": [
+        13.407359207639,
+        52.526689041428
+      ]
+    },
+    {
+      "label": "25200_22300",
+      "pixel": [
+        2601.632857,
+        2234.280305
+      ],
+      "world": [
+        13.407354733604,
+        52.527587690635
+      ]
+    },
+    {
+      "label": "25200_22400",
+      "pixel": [
+        2602.547428,
+        1444.730401
+      ],
+      "world": [
+        13.407350259332,
+        52.528486339704
+      ]
+    },
+    {
+      "label": "25300_22200",
+      "pixel": [
+        3388.689898,
+        3025.815411
+      ],
+      "world": [
+        13.408832625892,
+        52.526691760949
+      ]
+    },
+    {
+      "label": "25300_22300",
+      "pixel": [
+        3389.65457,
+        2236.441518
+      ],
+      "world": [
+        13.408828181929,
+        52.527590410243
+      ]
+    },
+    {
+      "label": "25300_22400",
+      "pixel": [
+        3390.618801,
+        1447.428375
+      ],
+      "world": [
+        13.408823737731,
+        52.528489059401
+      ]
+    },
+    {
+      "label": "25400_22200",
+      "pixel": [
+        4176.480195,
+        3028.843016
+      ],
+      "world": [
+        13.410306044327,
+        52.526694462128
+      ]
+    },
+    {
+      "label": "25400_22300",
+      "pixel": [
+        4177.282657,
+        2238.601651
+      ],
+      "world": [
+        13.410301630436,
+        52.52759311151
+      ]
+    },
+    {
+      "label": "25400_22400",
+      "pixel": [
+        4178.083328,
+        1450.124271
+      ],
+      "world": [
+        13.410297216312,
+        52.528491760754
+      ]
+    }
+  ],
+  "traceVersion": "manual_trace_soldner_grid_controls_v1",
+  "geometryReviewStatus": "manually_verified",
+  "completeness": {
+    "scopePartitionComplete": true,
+    "landUseComplete": true,
+    "densityComplete": true,
+    "heightComplete": true,
+    "buildingFormComplete": true,
+    "otherConstraintsComplete": false,
+    "notes": {
+      "resolved": [
+        "public green space and street-traffic partition",
+        "no density, height or building-form designation applies"
+      ],
+      "remaining": [
+        "park versus public-playground purpose boundary",
+        "planting and landscape-measure subareas"
+      ]
+    }
+  },
+  "rules": [],
+  "transform": {
+    "longitude": [
+      0.0000018702492674592744,
+      7.748169860485182e-9,
+      13.402471599283388
+    ],
+    "latitude": [
+      7.239559210794888e-9,
+      -0.0000011386843341539346,
+      52.530112602789785
+    ]
+  },
+  "qa": {
+    "controlPointCount": 9,
+    "residualsMetres": [
+      0.04520325822230881,
+      0.04447365819518831,
+      0.0038841852867486856,
+      0.011230463143901333,
+      0.022065052737352913,
+      0.026915085988096825,
+      0.05803754844075473,
+      0.07524661181059639,
+      0.027157989982409307
+    ],
+    "rmsResidualMetres": 0.04101721246943434,
+    "maxResidualMetres": 0.07524661181059639,
+    "maximumRmsResidualMetres": 0.25,
+    "maximumResidualMetres": 0.5,
+    "passed": true
+  },
+  "features": [
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              13.40914669204088,
+              52.52818896251962
+            ],
+            [
+              13.40945067487645,
+              52.5283176752132
+            ],
+            [
+              13.408852451595154,
+              52.5269033537821
+            ],
+            [
+              13.408215365877888,
+              52.52707738840377
+            ],
+            [
+              13.40914669204088,
+              52.52818896251962
+            ]
+          ]
+        ]
+      },
+      "bbox": [
+        13.408215365877888,
+        52.5269033537821,
+        13.40945067487645,
+        52.5283176752132
+      ],
+      "properties": {
+        "zoneKey": "I-8:public-green-space",
+        "label": "Öffentliche Grünfläche (Parkanlage und Kinderspielplatz)",
+        "landUseCode": "PUBLIC_GREEN_SPACE",
+        "purposeLabels": [
+          "PUBLIC_PARK",
+          "PUBLIC_PLAYGROUND"
+        ],
+        "confidence": "medium",
+        "rules": [
+          {
+            "ruleType": "permitted_uses",
+            "textValue": "[\"public park\",\"public playground\"]",
+            "legalCitation": "Plan drawing: ÖFFENTLICHE PARKANLAGE / ÖFFENTLICHER KINDERSPIELPLATZ",
+            "interpretation": "The broad public-green-space use is resolved; the internal purpose boundary remains incomplete."
+          }
+        ],
+        "planKey": "I-8",
+        "geometryMethod": "georeferenced_scan_affine_v1",
+        "sourcePdf": "data/documents/bplans/I-8--plan_sheet.pdf",
+        "sourcePage": 1
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              13.409055579074098,
+              52.52827821981511
+            ],
+            [
+              13.40808992916232,
+              52.52707786961849
+            ],
+            [
+              13.408877570651772,
+              52.526851540445605
+            ],
+            [
+              13.408924429127513,
+              52.526838069784304
+            ],
+            [
+              13.40914245017218,
+              52.52735421042392
+            ],
+            [
+              13.409391089717456,
+              52.527939089648925
+            ],
+            [
+              13.409503279656809,
+              52.52821284041573
+            ],
+            [
+              13.409537620572321,
+              52.52829661988448
+            ],
+            [
+              13.40927998924175,
+              52.52834191021646
+            ],
+            [
+              13.409128270505425,
+              52.52836858944204
+            ],
+            [
+              13.409055579074098,
+              52.52827821981511
+            ]
+          ],
+          [
+            [
+              13.40914669204088,
+              52.52818896251962
+            ],
+            [
+              13.408215365877888,
+              52.52707738840377
+            ],
+            [
+              13.408852451595154,
+              52.5269033537821
+            ],
+            [
+              13.40945067487645,
+              52.5283176752132
+            ],
+            [
+              13.40914669204088,
+              52.52818896251962
+            ]
+          ]
+        ]
+      },
+      "bbox": [
+        13.40808992916232,
+        52.526838069784304,
+        13.409537620572321,
+        52.52836858944204
+      ],
+      "properties": {
+        "zoneKey": "I-8:traffic",
+        "label": "Straßenverkehrsfläche",
+        "landUseCode": "TRAFFIC",
+        "confidence": "medium",
+        "rules": [
+          {
+            "ruleType": "permitted_uses",
+            "textValue": "[\"public street and traffic infrastructure\"]",
+            "legalCitation": "Plan drawing: Straßenverkehrsfläche"
+          }
+        ],
+        "planKey": "I-8",
+        "geometryMethod": "georeferenced_scan_affine_v1",
+        "sourcePdf": "data/documents/bplans/I-8--plan_sheet.pdf",
+        "sourcePage": 1
+      }
+    }
+  ]
+}

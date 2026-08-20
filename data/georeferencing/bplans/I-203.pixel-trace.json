@@ -1,0 +1,237 @@
+{
+  "schemaVersion": "bplan-pixel-trace-v1",
+  "planKey": "I-203",
+  "sourcePdf": "data/documents/bplans/I-203--plan_sheet.pdf",
+  "sourcePage": 1,
+  "traceVersion": "manual_trace_plan_scope_wfs_controls_v1",
+  "geometryReviewStatus": "manually_verified",
+  "completeness": {
+    "scopePartitionComplete": true,
+    "landUseComplete": true,
+    "densityComplete": true,
+    "heightComplete": true,
+    "buildingFormComplete": true,
+    "otherConstraintsComplete": false,
+    "notes": {
+      "resolved": ["WA, public park and street-traffic land-use partition", "GF 11500 sqm absolute project cap", "TH 52.0 m above NHN", "building envelope", "TG1 underground-garage envelope", "textual constraints 1-8"],
+      "remaining": ["exact spatial extent of area A for the 3 m utility easement in textual constraint 9"]
+    }
+  },
+  "render": {
+    "dpi": 200,
+    "width": 6622,
+    "height": 4677,
+    "renderer": "pdftoppm",
+    "sourceScopeGeometry": "data/import/bplans-fixed.ndjson#I-203:scope"
+  },
+  "controlPoints": [
+    {
+      "label": "scope_north_west",
+      "pixel": [1922.288003, 2438.088745],
+      "world": [13.38366749, 52.51840415]
+    },
+    {
+      "label": "scope_north_east",
+      "pixel": [2901.840781, 2340.350183],
+      "world": [13.38550186, 52.51851856]
+    },
+    {
+      "label": "scope_south_west",
+      "pixel": [1981.445311, 3030.404333],
+      "world": [13.38378612, 52.51772662]
+    },
+    {
+      "label": "scope_south_east",
+      "pixel": [2961.070044, 2930.458005],
+      "world": [13.38561118, 52.51789468]
+    }
+  ],
+  "qa": {
+    "maximumRmsResidualMetres": 2,
+    "maximumResidualMetres": 5
+  },
+  "zones": {
+    "type": "FeatureCollection",
+    "features": [
+      {
+        "type": "Feature",
+        "properties": {
+          "zoneKey": "I-203:WA",
+          "label": "Allgemeines Wohngebiet (WA)",
+          "landUseCode": "WA",
+          "confidence": "medium",
+          "rules": [
+            {
+              "ruleType": "permitted_uses",
+              "textValue": "[\"residential buildings\",\"shops, restaurants and non-disruptive craft businesses serving the area\",\"church, cultural, social, health and sports facilities\",\"lodging businesses and administrative facilities where exceptionally permitted\",\"other non-disruptive commercial businesses generally permitted on the first full storey and otherwise exceptionally\",\"rooms for liberal professions generally through the first full storey and above it exceptionally\"]",
+              "legalCitation": "BauNVO 1990 § 4 with textual constraints 1-3",
+              "interpretation": "Garden establishments and filling stations are excluded by textual constraint 1."
+            }
+          ]
+        },
+        "geometry": {
+          "type": "Polygon",
+          "coordinates": [[[1940, 2505], [2353, 2465], [2399, 2920], [1986, 2962], [1940, 2505]]]
+        }
+      },
+      {
+        "type": "Feature",
+        "properties": {
+          "zoneKey": "I-203:public-park",
+          "label": "Öffentliche Parkanlage",
+          "landUseCode": "PUBLIC_PARK",
+          "confidence": "medium",
+          "rules": [
+            {
+              "ruleType": "permitted_uses",
+              "textValue": "[\"public park and associated public open-space functions\"]",
+              "legalCitation": "Plan drawing: ÖFFENTLICHE PARKANLAGE"
+            }
+          ]
+        },
+        "geometry": {
+          "type": "Polygon",
+          "coordinates": [[[2353, 2465], [2818, 2418], [2862, 2868], [2399, 2920], [2353, 2465]]]
+        }
+      },
+      {
+        "type": "Feature",
+        "properties": {
+          "zoneKey": "I-203:traffic",
+          "label": "Straßenverkehrsfläche",
+          "landUseCode": "TRAFFIC",
+          "confidence": "medium",
+          "rules": [
+            {
+              "ruleType": "permitted_uses",
+              "textValue": "[\"public street and traffic infrastructure\"]",
+              "legalCitation": "Plan drawing: Straßenverkehrsfläche"
+            }
+          ]
+        },
+        "geometry": {
+          "type": "Polygon",
+          "coordinates": [
+            [[1922.288003, 2438.088745], [2901.840781, 2340.350183], [2961.070044, 2930.458005], [1981.445311, 3030.404333], [1922.288003, 2438.088745]],
+            [[1940, 2505], [1986, 2962], [2399, 2920], [2353, 2465], [1940, 2505]],
+            [[2353, 2465], [2399, 2920], [2862, 2868], [2818, 2418], [2353, 2465]]
+          ]
+        }
+      },
+      {
+        "type": "Feature",
+        "properties": {
+          "zoneKey": "I-203:building-envelope",
+          "label": "Überbaubare Grundstücksfläche (Baugrenze)",
+          "confidence": "medium",
+          "rules": [
+            {
+              "ruleType": "buildable_envelope",
+              "textValue": "Principal buildings must remain within the traced blue building line.",
+              "interpretation": "This is an overlapping constraint geometry, not a land-use zone."
+            }
+          ]
+        },
+        "geometry": {
+          "type": "Polygon",
+          "coordinates": [[[1995.216,2504.164],[2351.891,2479.016],[2384.707,2915.87],[2030.937,2942.692],[1995.216,2504.164]]]
+        }
+      },
+      {
+        "type": "Feature",
+        "properties": {
+          "zoneKey": "I-203:TG1",
+          "label": "Tiefgaragenfläche TG1",
+          "confidence": "medium",
+          "rules": [
+            {
+              "ruleType": "parking",
+              "textValue": "TG1 underground-garage envelope",
+              "interpretation": "The traced inner blue envelope is designated TG1. Textual constraint 8 requires at least 0.8 m of soil above underground garages."
+            }
+          ]
+        },
+        "geometry": {
+          "type": "Polygon",
+          "coordinates": [[[2097.227,2584.435],[2269.737,2574.15],[2284.14,2834.833],[2111.444,2843.937],[2097.227,2584.435]]]
+        }
+      }
+    ]
+  },
+  "rules": [
+    {
+      "zoneKey": "I-203:WA",
+      "ruleType": "floor_area_max_sqm",
+      "numericValue": 11500,
+      "unit": "m2",
+      "legalCitation": "Planzeichnung: GF 11.500 m²",
+      "interpretation": "Absolute maximum floor area for the complete WA development area. It is not GFZ and must not be duplicated as a parcel-level allowance."
+    },
+    {
+      "zoneKey": "I-203:WA",
+      "ruleType": "absolute_elevation_max_m",
+      "numericValue": 52,
+      "unit": "m_NHN",
+      "legalCitation": "Planzeichnung: TH 52,0 m ü. NHN",
+      "interpretation": "Maximum eaves elevation above NHN; this is not a relative building height."
+    },
+    {
+      "zoneKey": "I-203:WA",
+      "ruleType": "use_restriction",
+      "textValue": "§ 4(3) nos. 4 and 5 BauNVO exceptions excluded",
+      "legalCitation": "Textliche Festsetzung 1",
+      "interpretation": "Garden establishments and filling stations are not components of the plan."
+    },
+    {
+      "zoneKey": "I-203:WA",
+      "ruleType": "use_restriction",
+      "textValue": "Freie Berufe above the first full storey only exceptionally permissible",
+      "legalCitation": "Textliche Festsetzung 2"
+    },
+    {
+      "zoneKey": "I-203:WA",
+      "ruleType": "use_restriction",
+      "textValue": "§ 4(3) no. 2 BauNVO uses generally permissible on the first full storey",
+      "legalCitation": "Textliche Festsetzung 3"
+    },
+    {
+      "zoneKey": "I-203:WA",
+      "ruleType": "parking",
+      "textValue": "Surface parking spaces and garages prohibited on non-buildable land; underground garages excepted",
+      "legalCitation": "Textliche Festsetzung 4"
+    },
+    {
+      "ruleType": "other",
+      "textValue": "Internal division of street-traffic land is not fixed",
+      "legalCitation": "Textliche Festsetzung 5"
+    },
+    {
+      "ruleType": "other",
+      "textValue": "Fuel restricted to natural gas or heating oil EL, or fuels with no higher SOx, NOx and dust emissions per energy content",
+      "legalCitation": "Textliche Festsetzung 6"
+    },
+    {
+      "zoneKey": "I-203:WA",
+      "ruleType": "landscaping",
+      "textValue": "Roofs below 15 degrees must be greened, except technical installations and lighting surfaces",
+      "legalCitation": "Textliche Festsetzung 7"
+    },
+    {
+      "zoneKey": "I-203:TG1",
+      "ruleType": "landscaping",
+      "numericValue": 0.8,
+      "unit": "m",
+      "textValue": "minimum soil cover above underground garages",
+      "legalCitation": "Textliche Festsetzung 8"
+    },
+    {
+      "zoneKey": "I-203:WA",
+      "ruleType": "other",
+      "numericValue": 3,
+      "unit": "m",
+      "textValue": "utility easement width within area A between Dorotheenstraße and Mittelstraße",
+      "legalCitation": "Textliche Festsetzung 9",
+      "interpretation": "The rule is preserved, but area A has not yet been traced as a separate overlay."
+    }
+  ]
+}

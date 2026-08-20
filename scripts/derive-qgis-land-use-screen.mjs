@@ -12,6 +12,7 @@ const OUTPUT = resolve("data/import/lichterfelde-land-use-screen.sql");
 const PUBLIC_OUTPUT = resolve("public/data/lichterfelde-land-use-screen.json");
 const CELL_SIZE_M = 250;
 const DOMINANT_SHARE = 0.5;
+const PARK_EXCLUSION_SHARE = 0.01;
 const SOURCE_KEY = "user-qgis-lichterfelde-land-use";
 const SCREEN_METHOD = "qgis_exact_polygon_overlap_v1";
 const sql = (value) => value == null ? "NULL" : `'${String(value).replaceAll("'", "''")}'`;
@@ -244,8 +245,8 @@ const writePublicRecord = (id, evidence) => {
   firstPublicRecord = false;
 };
 writer.write("PRAGMA foreign_keys=ON;\nBEGIN;\n");
-publicWriter.write(`${JSON.stringify({ metadata: { source: "User-provided Lichterfelde QGIS GeoPackage", method: SCREEN_METHOD, dominantShareThreshold: DOMINANT_SHARE, crs: "EPSG:25833" } }).slice(0, -1)},"parcels":[`);
-writer.write(`INSERT INTO sources(source_key,title,publisher,source_type,url,licence,retrieved_at,metadata_json) VALUES(${sql(SOURCE_KEY)},'Lichterfelde QGIS land-use layers','User-provided QGIS workspace','derived','local:data/import/lichterfelde_layers.gpkg',NULL,CURRENT_TIMESTAMP,${sql(JSON.stringify({ crs: "EPSG:25833", method: SCREEN_METHOD, dominantShare: DOMINANT_SHARE, layers: layerDefinitions }))}) ON CONFLICT(source_key) DO UPDATE SET retrieved_at=CURRENT_TIMESTAMP,metadata_json=excluded.metadata_json;\n`);
+publicWriter.write(`${JSON.stringify({ metadata: { source: "User-provided Lichterfelde QGIS GeoPackage", method: SCREEN_METHOD, dominantShareThreshold: DOMINANT_SHARE, parkExclusionShareThreshold: PARK_EXCLUSION_SHARE, crs: "EPSG:25833" } }).slice(0, -1)},"parcels":[`);
+writer.write(`INSERT INTO sources(source_key,title,publisher,source_type,url,licence,retrieved_at,metadata_json) VALUES(${sql(SOURCE_KEY)},'Lichterfelde QGIS land-use layers','User-provided QGIS workspace','derived','local:data/import/lichterfelde_layers.gpkg',NULL,CURRENT_TIMESTAMP,${sql(JSON.stringify({ crs: "EPSG:25833", method: SCREEN_METHOD, dominantShare: DOMINANT_SHARE, parkExclusionShare: PARK_EXCLUSION_SHARE, layers: layerDefinitions }))}) ON CONFLICT(source_key) DO UPDATE SET retrieved_at=CURRENT_TIMESTAMP,metadata_json=excluded.metadata_json;\n`);
 writer.write(`DELETE FROM parcel_planning_observations WHERE observation_type='land_use_eligibility_screen' AND parcel_id IN (SELECT id FROM parcels WHERE borough='Steglitz-Zehlendorf' AND locality='Lichterfelde');\n`);
 
 const classCounts = { street: 0, park: 0, public_space: 0, residential_candidate: 0, other_or_review: 0 };
@@ -258,7 +259,7 @@ for (const parcel of parcels) {
   const residentialShare = roundedShare(overlapArea(parcel.geometry, parcel.bbox, indexes.residential), parcel.areaSqm);
   let parcelUseClass = "other_or_review";
   if (streetShare >= DOMINANT_SHARE) parcelUseClass = "street";
-  else if (parkShare >= DOMINANT_SHARE) parcelUseClass = "park";
+  else if (parkShare >= PARK_EXCLUSION_SHARE) parcelUseClass = "park";
   else if (publicSpaceShare >= DOMINANT_SHARE) parcelUseClass = "public_space";
   else if (residentialShare >= DOMINANT_SHARE) parcelUseClass = "residential_candidate";
   const vacancyEligible = parcelUseClass === "residential_candidate";
@@ -269,13 +270,14 @@ for (const parcel of parcels) {
     parcelUseClass,
     vacancyEligible,
     dominantShareThreshold: DOMINANT_SHARE,
+    parkExclusionShareThreshold: PARK_EXCLUSION_SHARE,
     streetOverlapShare: streetShare,
     parkOverlapShare: parkShare,
     publicSpaceOverlapShare: publicSpaceShare,
     residentialOverlapShare: residentialShare,
     qgisParcelUuid: parcel.uuid,
     qgisSourceAreaSqm: parcel.sourceAreaSqm,
-    caveat: "Deterministic screening from user-provided QGIS overlays. Residential candidate means eligible for vacancy screening, not proof of legal buildability.",
+    caveat: "Deterministic screening from user-provided QGIS overlays. Parcels with at least 1% park overlap are withheld; smaller overlaps are treated as boundary noise. Residential candidate means eligible for vacancy screening, not proof of legal buildability.",
   };
   writer.write(`INSERT INTO parcel_planning_observations(parcel_id,observation_type,text_value,extraction_method,confidence,review_status,source_id,source_locator,evidence_json) VALUES(${sql(parcel.id)},'land_use_eligibility_screen',${sql(parcelUseClass)},${sql(SCREEN_METHOD)},'medium','machine_checked',(SELECT id FROM sources WHERE source_key=${sql(SOURCE_KEY)}),${sql(`QGIS exact overlap for ALKIS parcel ${parcel.id}`)},${sql(JSON.stringify(evidence))});\n`);
   writePublicRecord(parcel.id, evidence);
@@ -290,6 +292,7 @@ for (const parcel of localParcels.values()) {
     parcelUseClass: "other_or_review",
     vacancyEligible: false,
     dominantShareThreshold: DOMINANT_SHARE,
+    parkExclusionShareThreshold: PARK_EXCLUSION_SHARE,
     streetOverlapShare: 0,
     parkOverlapShare: 0,
     publicSpaceOverlapShare: 0,
@@ -319,5 +322,5 @@ console.log(JSON.stringify({
   geometryAreaMismatches,
   featureCounts,
   classCounts,
-  thresholds: { dominantShare: DOMINANT_SHARE },
+  thresholds: { dominantShare: DOMINANT_SHARE, parkExclusionShare: PARK_EXCLUSION_SHARE },
 }, null, 2));

@@ -1,0 +1,41 @@
+{
+  "schemaVersion": "bplan-cadastral-use-overlay-v1",
+  "planKey": "1-47",
+  "sourcePdf": "data/documents/bplans/1-47--plan_sheet.pdf",
+  "sourcePage": 1,
+  "controlsArtifact": "data/georeferencing/bplans/1-47.soldner-controls.json",
+  "geometryMethod": "manual_1_47_cadastral_overlay_v1",
+  "traceVersion": "manual_1_47_coordinate_anchor_overlay_v1",
+  "confidence": "medium",
+  "maximumRmsResidualMetres": 0.01,
+  "maximumResidualMetres": 0.01,
+  "render": { "dpi": 200, "width": 8503, "height": 5356, "renderer": "pdftoppm" },
+  "unresolvedFields": ["ge1_ge2_internal_assignment", "grz_base_value", "gfz_not_expressly_fixed", "building_envelope_geometry", "storey_and_absolute_nhn_height_subareas", "building_form", "noise_contingent_subareas", "traffic_areas", "authority_confirmation"],
+  "caveat": "Official sheet and registered ALKIS overlay visually reviewed. Broad Gewerbegebiet or public-park use is parcel-matched for four parcels; boundary parcel 466 and every GE1/GE2-specific density, retail, noise, envelope, storey and height subarea remain unresolved.",
+  "completeness": {
+    "scopePartitionComplete": false, "landUseComplete": false, "densityComplete": false,
+    "heightComplete": false, "buildingFormComplete": false, "otherConstraintsComplete": false,
+    "notes": { "resolved": ["parcel 370 public park", "parcels 464, 467 and 468 broad Gewerbegebiet"], "remaining": ["boundary parcel 466", "GE1 versus GE2 subareas", "retail and noise subareas", "building envelopes, storeys and NHN heights", "traffic areas"] }
+  },
+  "assignments": [
+    { "parcelId": "11000306300370____", "zoneKey": "1-47:parcel:370:park", "label": "Öffentliche Parkanlage", "rules": [
+      { "ruleType": "land_use", "textValue": "public_park", "legalCitation": "Plan drawing: Öffentliche Parkanlage", "interpretation": "Current parcel boundary visibly follows the plan-drawn public-park area." },
+      { "ruleType": "permitted_uses", "textValue": "[\"public park and landscape uses\",\"plan-compatible recreational and open-space infrastructure\"]", "legalCitation": "Plan drawing: Öffentliche Parkanlage" }
+    ] },
+    { "parcelId": "11000306300464____", "zoneKey": "1-47:parcel:464:ge", "label": "Gewerbegebiet (GE; GE1/GE2 subarea unresolved)", "rules": [
+      { "ruleType": "land_use", "textValue": "commercial_area", "legalCitation": "Plan drawing: GE 1 / GE 2", "interpretation": "Broad Gewerbegebiet use is resolved; exact GE1/GE2 subarea remains unresolved." },
+      { "ruleType": "permitted_uses", "textValue": "[\"non-materially-disruptive commercial businesses\",\"warehouses and storage yards\",\"public enterprises\",\"business, office and administrative buildings\",\"sports facilities only exceptionally\",\"operational dwellings where exceptionally permitted\",\"company-owned social and health facilities\"]", "legalCitation": "Plan drawing GE1/GE2; text stipulations 1-5; BauNVO §8" },
+      { "ruleType": "use_restriction", "textValue": "Filling stations, general church/cultural/social/health facilities and entertainment venues are excluded; retail treatment depends on unresolved GE1/GE2 assignment.", "legalCitation": "Text stipulations 1-5" }
+    ] },
+    { "parcelId": "11000306300467____", "zoneKey": "1-47:parcel:467:ge", "label": "Gewerbegebiet (GE; mixed GE1/GE2)", "rules": [
+      { "ruleType": "land_use", "textValue": "commercial_area", "legalCitation": "Plan drawing: GE 1 / GE 2", "interpretation": "Parcel spans GE1/GE2 but remains entirely within the broad Gewerbegebiet designation." },
+      { "ruleType": "permitted_uses", "textValue": "[\"non-materially-disruptive commercial businesses\",\"warehouses and storage yards\",\"public enterprises\",\"business, office and administrative buildings\",\"sports facilities only exceptionally\",\"operational dwellings where exceptionally permitted\",\"company-owned social and health facilities\"]", "legalCitation": "Plan drawing GE1/GE2; text stipulations 1-5; BauNVO §8" },
+      { "ruleType": "use_restriction", "textValue": "Filling stations, general church/cultural/social/health facilities and entertainment venues are excluded; retail treatment depends on unresolved GE1/GE2 assignment.", "legalCitation": "Text stipulations 1-5" }
+    ] },
+    { "parcelId": "11000306300468____", "zoneKey": "1-47:parcel:468:ge", "label": "Gewerbegebiet (GE; GE1/GE2 subarea unresolved)", "rules": [
+      { "ruleType": "land_use", "textValue": "commercial_area", "legalCitation": "Plan drawing: GE 1 / GE 2", "interpretation": "Broad Gewerbegebiet use is resolved; exact GE1/GE2 subarea remains unresolved." },
+      { "ruleType": "permitted_uses", "textValue": "[\"non-materially-disruptive commercial businesses\",\"warehouses and storage yards\",\"public enterprises\",\"business, office and administrative buildings\",\"sports facilities only exceptionally\",\"operational dwellings where exceptionally permitted\",\"company-owned social and health facilities\"]", "legalCitation": "Plan drawing GE1/GE2; text stipulations 1-5; BauNVO §8" },
+      { "ruleType": "use_restriction", "textValue": "Filling stations, general church/cultural/social/health facilities and entertainment venues are excluded; retail treatment depends on unresolved GE1/GE2 assignment.", "legalCitation": "Text stipulations 1-5" }
+    ] }
+  ]
+}

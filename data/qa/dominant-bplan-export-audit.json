@@ -1,0 +1,14 @@
+{
+  "archive": "/Users/valentinsuhr/Documents/Competition/baugruppe-dashboard/data/exports/berlin-parcels.csv.gz",
+  "rows": 403484,
+  "dominantRows": 4,
+  "mixedRows": 3,
+  "violations": [],
+  "checks": {
+    "allRowsScanned": true,
+    "dominantRowsExist": true,
+    "mixedRowsExist": true,
+    "dominantSemanticsValid": true
+  },
+  "pass": true
+}

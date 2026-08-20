@@ -1,0 +1,36 @@
+{
+  "generatedAt": "2026-08-15T09:47:19.209Z",
+  "database": "/Users/valentinsuhr/Documents/Competition/baugruppe-dashboard/.wrangler/state/v3/d1/miniflare-D1DatabaseObject/faaf2b0445ab934c3aac48ddf0cdfade8f9bac050be98993748742cdd2cb05fb.sqlite",
+  "scope": {
+    "borough": "Steglitz-Zehlendorf",
+    "locality": "Lichterfelde"
+  },
+  "counts": {
+    "parcels": 12677,
+    "screens": 12677,
+    "distinctScreenedParcels": 12677,
+    "missingProvenance": 0,
+    "footprintFormulaErrors": 0,
+    "gfzFormulaErrors": 0,
+    "prematureGfzEstimates": 0,
+    "occupancyThresholdErrors": 0,
+    "confidenceErrors": 0,
+    "possibleVacant": 2138,
+    "highPotential": 385,
+    "moderatePotential": 371,
+    "nearFull": 659,
+    "unassessed": 9124
+  },
+  "checks": {
+    "oneScreenPerParcel": true,
+    "provenanceComplete": true,
+    "footprintFormulaConsistent": true,
+    "gfzFormulaConsistent": true,
+    "incompleteStoreyCoverageWithheld": true,
+    "vacancyThresholdConsistent": true,
+    "confidenceConsistent": true,
+    "categoriesReconcile": true
+  },
+  "pass": true,
+  "caveat": "Physical-capacity screening is indicative and is not a statutory GRZ/GFZ calculation or proof of buildability."
+}

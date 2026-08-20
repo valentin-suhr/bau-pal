@@ -1,0 +1,41 @@
+{
+  "plan_key": "6-9B",
+  "input_pdf": "../../data/documents/bplans/6-9B--plan_sheet.pdf",
+  "page": 1,
+  "dpi": 300,
+  "crs": "EPSG:25833",
+  "output_dir": "../../output/raster-pipeline/6-9B",
+  "ocr_language": "deu+eng",
+  "ocr_engine": "auto",
+  "gcps_csv": "gcps.template.csv",
+  "official_scope": null,
+  "alkis_parcels": null,
+  "alkis_layer": null,
+  "segmentation": {
+    "clusters": 12,
+    "device": "auto",
+    "sam_prompts": null,
+    "classes": [
+      {
+        "name": "building_area",
+        "cluster_ids": [],
+        "min_area_sqm": 8,
+        "simplify_m": 0.25,
+        "method": "lab_kmeans",
+        "confidence": "low"
+      },
+      {
+        "name": "public_green",
+        "cluster_ids": [],
+        "min_area_sqm": 8,
+        "simplify_m": 0.25,
+        "method": "lab_kmeans",
+        "confidence": "low"
+      }
+    ]
+  },
+  "qa": {
+    "max_rms_m": 2.0,
+    "allow_high_rms": false
+  }
+}

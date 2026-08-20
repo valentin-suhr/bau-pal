@@ -1,0 +1,25 @@
+{
+  "schemaVersion": "bplan-pixel-trace-v1",
+  "planKey": "TEST-AFFINE",
+  "sourcePdf": "tests/fixtures/test-plan.pdf",
+  "sourcePage": 1,
+  "traceVersion": "synthetic_test_v1",
+  "render": { "dpi": 300, "width": 1000, "height": 1000 },
+  "controlPoints": [
+    { "pixel": [0, 0], "world": [13.4, 52.5] },
+    { "pixel": [1000, 0], "world": [13.41, 52.499] },
+    { "pixel": [0, 1000], "world": [13.402, 52.491] },
+    { "pixel": [1000, 1000], "world": [13.412, 52.49] }
+  ],
+  "qa": { "maximumRmsResidualMetres": 0.1, "maximumResidualMetres": 0.2 },
+  "zones": {
+    "type": "FeatureCollection",
+    "features": [
+      {
+        "type": "Feature",
+        "properties": { "zoneKey": "test-zone", "label": "Synthetic test zone", "confidence": "high" },
+        "geometry": { "type": "Polygon", "coordinates": [[[100,100],[900,100],[900,900],[100,900],[100,100]]] }
+      }
+    ]
+  }
+}

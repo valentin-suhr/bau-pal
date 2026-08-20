@@ -1,0 +1,93 @@
+{
+  "schemaVersion": "bplan-pixel-trace-v1",
+  "planKey": "I-8",
+  "sourcePdf": "data/documents/bplans/I-8--plan_sheet.pdf",
+  "sourcePage": 1,
+  "traceVersion": "manual_trace_soldner_grid_controls_v1",
+  "geometryReviewStatus": "manually_verified",
+  "completeness": {
+    "scopePartitionComplete": true,
+    "landUseComplete": true,
+    "densityComplete": true,
+    "heightComplete": true,
+    "buildingFormComplete": true,
+    "otherConstraintsComplete": false,
+    "notes": {
+      "resolved": ["public green space and street-traffic partition", "no density, height or building-form designation applies"],
+      "remaining": ["park versus public-playground purpose boundary", "planting and landscape-measure subareas"]
+    }
+  },
+  "render": {
+    "dpi": 200,
+    "width": 6536,
+    "height": 4600,
+    "renderer": "pdftoppm",
+    "controlGridCrs": "EPSG:3068 DHDN / Soldner Berlin",
+    "controlGridTransform": "+proj=cass +lat_0=52.41864827777778 +lon_0=13.62720366666667 +x_0=40000 +y_0=10000 +ellps=bessel +towgs84=598.1,73.7,418.2,0.202,0.045,-2.455,6.7 +units=m +no_defs"
+  },
+  "controlPoints": [
+    { "label": "25200_22200", "pixel": [2600.719494, 3022.787114], "world": [13.407359207639, 52.526689041428] },
+    { "label": "25200_22300", "pixel": [2601.632857, 2234.280305], "world": [13.407354733604, 52.527587690635] },
+    { "label": "25200_22400", "pixel": [2602.547428, 1444.730401], "world": [13.407350259332, 52.528486339704] },
+    { "label": "25300_22200", "pixel": [3388.689898, 3025.815411], "world": [13.408832625892, 52.526691760949] },
+    { "label": "25300_22300", "pixel": [3389.65457, 2236.441518], "world": [13.408828181929, 52.527590410243] },
+    { "label": "25300_22400", "pixel": [3390.618801, 1447.428375], "world": [13.408823737731, 52.528489059401] },
+    { "label": "25400_22200", "pixel": [4176.480195, 3028.843016], "world": [13.410306044327, 52.526694462128] },
+    { "label": "25400_22300", "pixel": [4177.282657, 2238.601651], "world": [13.410301630436, 52.52759311151] },
+    { "label": "25400_22400", "pixel": [4178.083328, 1450.124271], "world": [13.410297216312, 52.528491760754] }
+  ],
+  "qa": {
+    "maximumRmsResidualMetres": 0.25,
+    "maximumResidualMetres": 0.5
+  },
+  "zones": {
+    "type": "FeatureCollection",
+    "features": [
+      {
+        "type": "Feature",
+        "properties": {
+          "zoneKey": "I-8:public-green-space",
+          "label": "Öffentliche Grünfläche (Parkanlage und Kinderspielplatz)",
+          "landUseCode": "PUBLIC_GREEN_SPACE",
+          "purposeLabels": ["PUBLIC_PARK", "PUBLIC_PLAYGROUND"],
+          "confidence": "medium",
+          "rules": [
+            {
+              "ruleType": "permitted_uses",
+              "textValue": "[\"public park\",\"public playground\"]",
+              "legalCitation": "Plan drawing: ÖFFENTLICHE PARKANLAGE / ÖFFENTLICHER KINDERSPIELPLATZ",
+              "interpretation": "The broad public-green-space use is resolved; the internal purpose boundary remains incomplete."
+            }
+          ]
+        },
+        "geometry": {
+          "type": "Polygon",
+          "coordinates": [[[3562, 1712], [3725, 1600], [3400, 2840], [3060, 2685], [3562, 1712]]]
+        }
+      },
+      {
+        "type": "Feature",
+        "properties": {
+          "zoneKey": "I-8:traffic",
+          "label": "Straßenverkehrsfläche",
+          "landUseCode": "TRAFFIC",
+          "confidence": "medium",
+          "rules": [
+            {
+              "ruleType": "permitted_uses",
+              "textValue": "[\"public street and traffic infrastructure\"]",
+              "legalCitation": "Plan drawing: Straßenverkehrsfläche"
+            }
+          ]
+        },
+        "geometry": {
+          "type": "Polygon",
+          "coordinates": [
+            [[3513.609,1633.306],[2992.934,2684.151],[3413.242,2885.587],[3438.247,2897.576],[3556.695,2445.051],[3691.764,1932.265],[3752.745,1692.243],[3771.411,1618.786],[3633.827,1578.137],[3552.804,1554.192],[3513.609,1633.306]],
+            [[3562,1712],[3060,2685],[3400,2840],[3725,1600],[3562,1712]]
+          ]
+        }
+      }
+    ]
+  }
+}

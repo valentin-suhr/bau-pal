@@ -40,3 +40,47 @@ next-env.d.ts
 /.wrangler/
 /outputs/
 /work/
+/output/
+/tmp/
+
+# local Python environments and caches
+**/.venv/
+**/__pycache__/
+*.py[cod]
+
+# local editor/Finder backup copies
+/app/* 2.*
+
+# Reproducible citywide source extracts are too large for Git. Keep bounded
+# named samples in data/import for tests and documentation.
+/data/import/alkis-parcels.ndjson
+/data/import/alkis-parcels.sql
+/data/import/bplans-fixed.ndjson
+/data/import/bplans-fixed.sql
+/data/import/bplans-process.ndjson
+/data/import/bplans-process.sql
+/data/import/bplans-repealed.ndjson
+/data/import/bplans-repealed.sql
+/data/import/parcel-planning-segments.ndjson
+/data/import/parcel-planning-segments.sql
+/data/import/bplan-assets*.ndjson
+/data/import/Baunutzungsplan.zip
+/data/import/parcel-bnp-*.ndjson
+/data/import/parcel-bnp-*.sql
+/data/import/fluchtlinien.ndjson
+/data/import/fluchtlinien.sql
+/data/import/parcel-fluchtlinien.ndjson
+/data/documents/
+
+# Reproducible/generated GIS exports and intermediate database payloads.
+# These contain files above GitHub's 100 MB object limit and are rebuilt by
+# the scripts documented in README.md.
+/data/exports/
+/data/import/*.ndjson
+/data/import/*.gpkg
+*.gpkg-shm
+*.gpkg-wal
+/data/import/alkis-*.sql
+/data/import/parcel-*.sql
+/data/import/fluchtlinien.sql
+/data/import/lichterfelde-land-use-screen.sql

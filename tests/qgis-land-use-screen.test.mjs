@@ -20,11 +20,22 @@ test("non-building land cannot be vacancy eligible", () => {
   assert.equal(violations, 0);
 });
 
+test("material park overlap cannot be vacancy eligible", () => {
+  const violations = scalar("SELECT count(*) FROM parcel_planning_observations WHERE observation_type='land_use_eligibility_screen' AND json_extract(evidence_json,'$.vacancyEligible')=1 AND json_extract(evidence_json,'$.parkOverlapShare')>=0.01");
+  assert.equal(violations, 0);
+});
+
+test("every vacancy-eligible parcel is predominantly inside the uploaded Wohnbauflächen layer", () => {
+  const violations = scalar("SELECT count(*) FROM parcel_planning_observations WHERE observation_type='land_use_eligibility_screen' AND json_extract(evidence_json,'$.vacancyEligible')=1 AND json_extract(evidence_json,'$.residentialOverlapShare')<0.5");
+  assert.equal(violations, 0);
+});
+
 test("the source and exact-overlap method remain explicit", async () => {
   const script = await readFile(new URL("../scripts/derive-qgis-land-use-screen.mjs", import.meta.url), "utf8");
   assert.match(script, /user-qgis-lichterfelde-land-use/);
   assert.match(script, /qgis_exact_polygon_overlap_v1/);
   assert.match(script, /DOMINANT_SHARE = 0\.5/);
+  assert.match(script, /PARK_EXCLUSION_SHARE = 0\.01/);
   assert.match(script, /polygonClipping\.intersection/);
   assert.match(script, /qgisParcelMatch: false/);
 });

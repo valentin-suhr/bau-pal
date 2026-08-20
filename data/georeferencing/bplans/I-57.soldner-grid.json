@@ -1,0 +1,10 @@
+{
+  "eastings": [24300, 24400, 24500, 24600],
+  "northings": [22000, 21900, 21800, 21700],
+  "cropOrigin": [1700, 1100],
+  "minimumCoverage": 0.05,
+  "expectedSpacingPx": 787.4,
+  "spacingTolerance": 0.04,
+  "maximumRmsResidualMetres": 2,
+  "maximumResidualMetres": 2
+}

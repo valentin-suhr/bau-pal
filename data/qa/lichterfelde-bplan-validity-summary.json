@@ -1,0 +1,33 @@
+{
+  "schemaVersion": "lichterfelde-bplan-validity-v1",
+  "generatedAt": "2026-08-12T16:09:58.518Z",
+  "locality": "Lichterfelde",
+  "intendedUse": "MVP processing queue; not a substitute for a parcel-specific planning-law opinion",
+  "classificationRule": {
+    "upToDate": "Official Berlin WFS status is in force and no partial-supersession or invalidity evidence is present in the local evidence set.",
+    "partiallyOutdated": "The plan remains in the official fixed-plan layer, but Berlin marks it partially obsolete or provides a successor relation.",
+    "partiallyInvalid": "A court decision or reviewed legal evidence invalidates a defined portion while another portion remains effective.",
+    "fullyOutdated": "Official repealed/undergegangen geometry intersects Lichterfelde; these records are excluded from the controlling-plan queue.",
+    "pending": "Official status is Im Verfahren. Excluded from the enacted-plan working list."
+  },
+  "counts": {
+    "enactedIncluded": 100,
+    "outdated_repealed": 0,
+    "partially_invalid_still_in_force": 0,
+    "partially_outdated_still_in_force": 9,
+    "up_to_date_in_force": 91,
+    "fully_outdated_repealed_intersecting": 0,
+    "pending_excluded": 21,
+    "no_controlling_parcel_assigned": 25
+  },
+  "sourceSnapshot": {
+    "source": "Berlin Bebauungsplanverfahren WFS plus local reviewed legal dispositions",
+    "latestFeatureTimestamp": "2026-08-01T07:53:27.621Z"
+  },
+  "caveats": [
+    "Plan age is not a validity test: an older plan can remain legally binding.",
+    "A partially superseded plan remains relevant for its surviving spatial extent and must not be dropped wholesale.",
+    "The operational-assignment flag describes the current parcel-processing model; it does not itself revoke a plan.",
+    "The WFS often omits effective dates, so the export is sorted by legal validity class and plan key rather than enactment age."
+  ]
+}

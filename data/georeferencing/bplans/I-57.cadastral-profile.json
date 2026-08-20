@@ -1,0 +1,42 @@
+{
+  "schemaVersion": "bplan-cadastral-use-overlay-v1",
+  "planKey": "I-57",
+  "sourcePdf": "data/documents/bplans/I-57--plan_sheet.pdf",
+  "sourcePage": 1,
+  "controlsArtifact": "data/georeferencing/bplans/I-57.soldner-controls.json",
+  "geometryMethod": "manual_i57_cadastral_overlay_v1",
+  "traceVersion": "manual_i57_cadastral_overlay_v1",
+  "confidence": "medium",
+  "maximumRmsResidualMetres": 2,
+  "maximumResidualMetres": 2,
+  "render": { "dpi": 200, "width": 7087, "height": 5353, "renderer": "pdftoppm" },
+  "unresolvedFields": ["grz_not_expressly_fixed", "gfz_not_expressly_fixed", "building_envelope_geometry", "storey_and_height_subareas", "building_form", "park_playground_ballfield_and_pool_internal_purposes", "traffic_and_pedestrian_areas", "authority_confirmation"],
+  "caveat": "Official sheet and registered ALKIS overlay visually reviewed. Broad WA or public-green-space use is parcel-matched for five parcels; two edge parcels and all internal dimensional/purpose subareas remain unresolved.",
+  "completeness": {
+    "scopePartitionComplete": false, "landUseComplete": false, "densityComplete": false,
+    "heightComplete": false, "buildingFormComplete": false, "otherConstraintsComplete": false,
+    "notes": { "resolved": ["WA parcels 87, 239 and 241", "broad public green space parcels 288 and 342"], "remaining": ["edge parcels 240 and 242", "internal park purposes", "WA building envelope, storey and height subareas", "traffic and pedestrian areas"] }
+  },
+  "assignments": [
+    { "parcelId": "11000192000087____", "zoneKey": "I-57:parcel:87:wa", "label": "Allgemeines Wohngebiet (WA)", "rules": [
+      { "ruleType": "land_use", "textValue": "general_residential", "legalCitation": "Plan drawing: WA", "interpretation": "Parcel boundary is visibly contained by the left WA designation." },
+      { "ruleType": "permitted_uses", "textValue": "[\"residential buildings\",\"shops, restaurants and non-disruptive craft businesses serving the area\",\"church, cultural, social, health and sports facilities\",\"lodging businesses, other non-disruptive commercial businesses, administrative facilities, garden businesses and qualifying filling stations only where exceptionally permitted\"]", "legalCitation": "Plan drawing WA with incorporated BauNVO §4" }
+    ] },
+    { "parcelId": "11000192000239____", "zoneKey": "I-57:parcel:239:wa", "label": "Allgemeines Wohngebiet (WA)", "rules": [
+      { "ruleType": "land_use", "textValue": "general_residential", "legalCitation": "Plan drawing: WA", "interpretation": "Parcel boundary is visibly contained by the right WA designation." },
+      { "ruleType": "permitted_uses", "textValue": "[\"residential buildings\",\"shops, restaurants and non-disruptive craft businesses serving the area\",\"church, cultural, social, health and sports facilities\",\"lodging businesses, other non-disruptive commercial businesses, administrative facilities, garden businesses and qualifying filling stations only where exceptionally permitted\"]", "legalCitation": "Plan drawing WA with incorporated BauNVO §4" }
+    ] },
+    { "parcelId": "11000192000241____", "zoneKey": "I-57:parcel:241:wa", "label": "Allgemeines Wohngebiet (WA)", "rules": [
+      { "ruleType": "land_use", "textValue": "general_residential", "legalCitation": "Plan drawing: WA", "interpretation": "Parcel boundary is visibly contained by the right WA designation." },
+      { "ruleType": "permitted_uses", "textValue": "[\"residential buildings\",\"shops, restaurants and non-disruptive craft businesses serving the area\",\"church, cultural, social, health and sports facilities\",\"lodging businesses, other non-disruptive commercial businesses, administrative facilities, garden businesses and qualifying filling stations only where exceptionally permitted\"]", "legalCitation": "Plan drawing WA with incorporated BauNVO §4" }
+    ] },
+    { "parcelId": "11000192000288____", "zoneKey": "I-57:parcel:288:green", "label": "Öffentliche Grünfläche", "rules": [
+      { "ruleType": "land_use", "textValue": "public_green_space", "legalCitation": "Plan drawing: Öffentliche Grünfläche", "interpretation": "Broad non-building green-space use is resolved; internal recreational purpose remains unresolved." },
+      { "ruleType": "permitted_uses", "textValue": "[\"public park and recreation uses\",\"plan-designated playground, ballfield and children's-pool purposes where spatially applicable\"]", "legalCitation": "Plan drawing: Öffentliche Parkanlage / Kinderspielplatz / Bolzplatz / Kinderbad" }
+    ] },
+    { "parcelId": "11000192000342____", "zoneKey": "I-57:parcel:342:green", "label": "Öffentliche Grünfläche", "rules": [
+      { "ruleType": "land_use", "textValue": "public_green_space", "legalCitation": "Plan drawing: Öffentliche Grünfläche", "interpretation": "Broad non-building green-space use is resolved; internal recreational purposes remain mixed." },
+      { "ruleType": "permitted_uses", "textValue": "[\"public park and recreation uses\",\"plan-designated playground, ballfield and children's-pool purposes where spatially applicable\"]", "legalCitation": "Plan drawing: Öffentliche Parkanlage / Kinderspielplatz / Bolzplatz / Kinderbad" }
+    ] }
+  ]
+}

@@ -1,5 +1,5 @@
 {
-  "name": "site-creator-vinext-starter",
+  "name": "bau-pal",
   "version": "0.1.0",
   "private": true,
   "engines": {
@@ -22,7 +22,9 @@
     "derive:building-context:sql": "node scripts/build-settlement-context-sql.mjs",
     "derive:development-capacity": "node scripts/derive-development-capacity.mjs",
     "derive:qgis-land-use": "node scripts/derive-qgis-land-use-screen.mjs && node scripts/run-local-sql.mjs data/import/lichterfelde-land-use-screen.sql",
+    "build:lichterfelde-demo-assets": "node scripts/build-lichterfelde-demo-assets.mjs",
     "build:lichterfelde-building-layer": "node scripts/build-lichterfelde-building-layer.mjs",
+    "build:processed-bplan-layer": "node scripts/build-lichterfelde-processed-bplan-layer.mjs",
     "derive:development-capacity:sql": "node scripts/build-development-capacity-sql.mjs",
     "assign:localities": "node scripts/assign-localities.mjs",
     "refine:historical-sector": "node scripts/refine-historical-sector.mjs",
@@ -55,6 +57,7 @@
     "queue:bplan-zone-review": "node scripts/build-bplan-zone-review-queue.mjs",
     "classify:bplan-validity": "node scripts/classify-lichterfelde-bplan-validity.mjs",
     "build:bplan-raster-gis-notebook": "python3 analysis/build_bplan_raster_gis_colab.py",
+    "build:bplan-raster-gis-bulk-notebook": "python3 analysis/build_bplan_raster_gis_bulk_colab.py",
     "extract:soldner-grid-controls": "node scripts/extract-soldner-grid-controls.mjs",
     "inventory:soldner-grid-candidates": "node scripts/inventory-soldner-grid-candidates.mjs",
     "render:georef-parcel-overlay": "node scripts/render-georef-parcel-overlay.mjs",
@@ -63,15 +66,15 @@
     "georef:bplan-zones": "node scripts/georeference-bplan-zones.mjs",
     "georef:bplan-zones:sql": "node scripts/build-georeferenced-bplan-zone-sql.mjs",
     "assign:bplan-zones": "node scripts/assign-bplan-zones.mjs",
-    "extract:bplan-text": "/Users/valentinsuhr/.cache/codex-runtimes/codex-primary-runtime/dependencies/python/bin/python3 scripts/extract-bplan-text.py",
+    "extract:bplan-text": "python3 scripts/extract-bplan-text.py",
     "ocr:bplan-assets": "node scripts/ocr-bplan-assets.mjs",
-    "extract:bplan-text-rules": "/Users/valentinsuhr/.cache/codex-runtimes/codex-primary-runtime/dependencies/python/bin/python3 scripts/extract-bplan-text-rule-candidates.py",
+    "extract:bplan-text-rules": "python3 scripts/extract-bplan-text-rule-candidates.py",
     "extract:bplan-text-rules:sql": "node scripts/build-bplan-text-rule-sql.mjs",
     "extract:bplan-wfs-rules": "node scripts/extract-bplan-wfs-rules.mjs",
     "extract:bplan-wfs-rules:sql": "node scripts/build-planning-rule-sql.mjs",
     "assign:bnp:coordinates": "node scripts/assign-bnp-coordinates.mjs",
-    "assign:bnp:sample": "/Users/valentinsuhr/.cache/codex-runtimes/codex-primary-runtime/dependencies/python/bin/python3 scripts/sample-bnp-raster.py",
-    "assign:bnp:baustufe": "/Users/valentinsuhr/.cache/codex-runtimes/codex-primary-runtime/dependencies/python/bin/python3 scripts/sample-bnp-baustufe.py",
+    "assign:bnp:sample": "python3 scripts/sample-bnp-raster.py",
+    "assign:bnp:baustufe": "python3 scripts/sample-bnp-baustufe.py",
     "assign:bnp:baustufe:sql": "node scripts/build-bnp-baustufe-sql.mjs",
     "assign:bnp:sql": "node scripts/build-bnp-observation-sql.mjs",
     "import:fluchtlinien": "node scripts/import-fluchtlinien.mjs",
@@ -89,13 +92,15 @@
     "audit:export:bplan-zones": "python3 scripts/audit-dominant-bplan-export.py"
   },
   "dependencies": {
+    "@types/three": "^0.185.4",
     "drizzle-orm": "0.45.2",
     "next": "16.2.6",
     "pngjs": "^7.0.0",
     "polygon-clipping": "^0.15.7",
     "proj4": "^2.21.0",
     "react": "19.2.6",
-    "react-dom": "19.2.6"
+    "react-dom": "19.2.6",
+    "three": "^0.185.1"
   },
   "devDependencies": {
     "@cloudflare/vite-plugin": "1.37.1",

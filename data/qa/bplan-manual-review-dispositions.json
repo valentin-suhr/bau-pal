@@ -1,0 +1,162 @@
+{
+  "schemaVersion": "bplan-manual-review-dispositions-v1",
+  "reviewedAt": "2026-08-01",
+  "dispositions": [
+    {
+      "planKey": "I-211",
+      "route": "requires_internal_zone_georeferencing",
+      "sourcePdf": "data/documents/bplans/I-211--plan_sheet.pdf",
+      "reason": "The controlling parcel intersects SO Bundesregierung, public promenade, traffic areas and separate height/density subareas; parcel-wide GRZ, GFZ or height cannot be assigned without internal geometry."
+    },
+    {
+      "planKey": "1-72",
+      "route": "requires_internal_zone_georeferencing",
+      "sourcePdf": "data/documents/bplans/1-72--plan_sheet.pdf",
+      "reason": "The controlling parcel contains multiple WA building fields G1-G8, underground-garage areas, traffic land and different storey/height and acoustic subareas."
+    },
+    {
+      "planKey": "I-B4bb",
+      "route": "requires_internal_zone_georeferencing",
+      "sourcePdf": "data/documents/bplans/I-B4bb--plan_sheet.pdf",
+      "reason": "The MK parcel is governed through two enlarged subsidiary drawings with different building/storey envelopes and street overhangs; document-level GFZ/storey mentions are not parcel-wide rules."
+    },
+    {
+      "planKey": "I-40",
+      "route": "requires_internal_zone_georeferencing",
+      "sourcePdf": "data/documents/bplans/I-40--plan_sheet.pdf",
+      "reason": "The plan contains separate WA building areas, a public childcare-facility area and street traffic land across the controlling cadastral geometry."
+    },
+    {
+      "planKey": "I-27",
+      "route": "requires_internal_zone_georeferencing",
+      "sourcePdf": "data/documents/bplans/I-27--plan_sheet.pdf",
+      "reason": "The plan contains two WA building fields with different storey markings, a public playground and street traffic land across the controlling cadastral geometry."
+    },
+    {
+      "planKey": "I-218-1",
+      "route": "requires_internal_zone_georeferencing",
+      "sourcePdf": "data/documents/bplans/I-218-1--plan_sheet.pdf",
+      "reason": "The plan contains distinct SO religious-centre and archaeological-exhibition areas, private traffic/access areas and multiple absolute-height and building-envelope subareas."
+    },
+    {
+      "planKey": "II-22",
+      "route": "requires_internal_zone_georeferencing",
+      "sourcePdf": "data/documents/bplans/II-22--plan_sheet.pdf",
+      "reason": "The MK site uses five subsidiary drawings for different floor-by-floor envelopes from the first through ninth full storeys, plus underground-garage and traffic areas."
+    },
+    {
+      "planKey": "II-4",
+      "route": "requires_internal_zone_georeferencing",
+      "sourcePdf": "data/documents/bplans/II-4--plan_sheet.pdf",
+      "reason": "Only a 3.5 m² controlling intersection is present while the sheet contains public green space, water, road and two special-purpose public building footprints; a parcel rule cannot be inferred from the plan summary."
+    },
+    {
+      "planKey": "II-4-1",
+      "route": "requires_internal_zone_georeferencing",
+      "sourcePdf": "data/documents/bplans/II-4-1--plan_sheet.pdf",
+      "reason": "Only a 124 m² controlling intersection is present while the sheet contains WA, a separately dimensioned circular building envelope and public parkland; exact zone intersection is required."
+    },
+    {
+      "planKey": "1-109VE",
+      "route": "requires_internal_zone_georeferencing",
+      "sourcePdf": "data/documents/bplans/1-109VE--plan_sheet.pdf",
+      "reason": "Two current ALKIS parcels share the project area, its GF 20,600 m² cap and XI/V/XVIII storey-height subareas; the project-wide maximum must not be duplicated onto both parcel rows."
+    },
+    {
+      "planKey": "I-43a",
+      "route": "requires_internal_zone_georeferencing",
+      "sourcePdf": "data/documents/bplans/I-43a--plan_sheet.pdf",
+      "reason": "Two current parcels intersect MK blocks III A and III B, separately stated GF 6,900 m² and GF 23,000 m², several building envelopes and street land."
+    },
+    {
+      "planKey": "1-2b",
+      "route": "requires_internal_zone_georeferencing",
+      "sourcePdf": "data/documents/bplans/1-2b--plan_sheet.pdf",
+      "reason": "Two current parcels intersect the MK block, arcade, street land and multiple vertically differentiated building envelopes; the applicable storeys cannot be assigned from the document summary."
+    },
+    {
+      "planKey": "1-50VE",
+      "route": "requires_internal_zone_georeferencing",
+      "sourcePdf": "data/documents/bplans/1-50VE--plan_sheet.pdf",
+      "reason": "Two current parcels divide the spa/wellness project, connector, parking and T1-T4 auxiliary subareas; project-wide GRZ 0.41 and use constraints require parcel-zone allocation."
+    },
+    {
+      "planKey": "I-8",
+      "route": "partially_georeferenced",
+      "sourcePdf": "data/documents/bplans/I-8--plan_sheet.pdf",
+      "reason": "The public-green-space and street-traffic partition was traced using nine printed Soldner-Berlin grid controls at 0.04 m RMS residual and allocated to current ALKIS parcels. The park versus playground purpose boundary and landscape-measure overlays remain unresolved."
+    },
+    {
+      "planKey": "I-14a",
+      "route": "partially_georeferenced",
+      "sourcePdf": "data/documents/bplans/I-14a--plan_sheet.pdf",
+      "reason": "A 16-point Soldner Berlin Netz 88 registration at 0.075 m RMS / 0.134 m maximum residual verifies parcels 293, 296-299 as WA1 and parcel 295 as WA2. Full traffic, building-envelope/storey, absolute-height, roof, parking, easement and planting geometry remains unresolved."
+    },
+    {
+      "planKey": "I-57",
+      "route": "partially_georeferenced",
+      "sourcePdf": "data/documents/bplans/I-57--plan_sheet.pdf",
+      "reason": "A spacing-gated 16-point Soldner registration at 0.837 m RMS / 1.477 m maximum residual verifies parcels 87, 239 and 241 as WA and parcels 288 and 342 as broad public green space. Edge parcels 240/242 and internal use, envelope, storey, height and traffic partitions remain unresolved."
+    },
+    {
+      "planKey": "1-47",
+      "route": "partially_georeferenced",
+      "sourcePdf": "data/documents/bplans/1-47--plan_sheet.pdf",
+      "reason": "The printed coordinate register point X (Soldner y 22429.74 / x 23572.77) and 1:1000 scale anchor the ALKIS overlay with an estimated 0.381 m registration uncertainty. Parcel 370 is public park and parcels 464, 467 and 468 are broad Gewerbegebiet; boundary parcel 466 and GE1/GE2-specific rules remain unresolved."
+    },
+    {
+      "planKey": "I-214",
+      "route": "requires_internal_zone_georeferencing",
+      "sourcePdf": "data/documents/bplans/I-214--plan_sheet.pdf",
+      "reason": "A reviewed current-ALKIS overlay shows cadastral parcels crossing MK1/MK2, SO1 federal-government, SO2 state-representation, school/youth-club, substation and traffic zones. No broad parcel-wide use can be promoted; full internal zone geometry is required."
+    },
+    {
+      "planKey": "1-52B",
+      "route": "requires_internal_zone_georeferencing",
+      "sourcePdf": "data/documents/bplans/1-52B--plan_sheet.pdf",
+      "reason": "The reviewed sheet contains a broad WA area and separate street-traffic land across 32 current controlling parcels. Its printed Soldner coordinates are carried by rotated marginal ticks rather than long axis-aligned grid lines, so the automatic regular-grid detector is not applicable; manual control registration and the internal WA/traffic boundary are required before parcel-wide use can be promoted."
+    },
+    {
+      "planKey": "I-B5ca",
+      "route": "requires_internal_zone_georeferencing",
+      "sourcePdf": "data/documents/bplans/I-B5ca--plan_sheet.pdf",
+      "reason": "The reviewed sheet separates WA and WA1, WB1 and WB2, a hospital special area, a Jewish-community-centre area and street-traffic land across 32 current controlling parcels. Its Soldner values are printed at rotated marginal ticks rather than as long axis-aligned grid lines, so manual control registration and full internal zone tracing are required before any parcel-wide use or restriction can be promoted."
+    },
+    {
+      "planKey": "I-39",
+      "route": "requires_internal_zone_georeferencing",
+      "sourcePdf": "data/documents/bplans/I-39--plan_sheet.pdf",
+      "reason": "The reviewed sheet separates WA, MK, a children's day-care and gymnasium area, culture, public park, traffic-calmed land, ordinary street land and several height/building-envelope subareas across 31 current controlling parcels. Its Soldner coordinates are shown as rotated marginal ticks, so manual registration and full internal zone tracing are required before parcel rules can be promoted."
+    },
+    {
+      "planKey": "I-B4ca",
+      "route": "requires_internal_zone_georeferencing",
+      "sourcePdf": "data/documents/bplans/I-B4ca--plan_sheet.pdf",
+      "reason": "The elongated MK plan contains areas A1-a through A11, separately capped residential floor areas, several height and building-envelope subareas, public playground and traffic land."
+    },
+    {
+      "planKey": "1-35a",
+      "route": "requires_internal_zone_georeferencing",
+      "sourcePdf": "data/documents/bplans/1-35a--plan_sheet.pdf",
+      "reason": "The cultural-facilities plan contains many protected building footprints, separate floor-area caps, traffic-calmed and pedestrian areas, and a subsidiary upper-storey envelope."
+    },
+    {
+      "planKey": "1-5VE",
+      "route": "requires_internal_zone_georeferencing",
+      "sourcePdf": "data/documents/bplans/1-5VE--plan_sheet.pdf",
+      "reason": "The office/business project contains multiple building and underground-garage areas with GF 15,000 m², 9,650 m² and 28,000 m² caps and several relative-height subareas."
+    },
+    {
+      "planKey": "I-203",
+      "route": "partially_georeferenced",
+      "sourcePdf": "data/documents/bplans/I-203--plan_sheet.pdf",
+      "reason": "Land-use zones, GF 11,500 sqm, TH 52.0 m above NHN, the building/TG1 envelopes and textual constraints 1-8 are traced or typed at 1.43 m RMS residual. Only the exact spatial extent of area A for the 3 m utility easement in textual constraint 9 remains unresolved."
+    },
+    {
+      "planKey": "I-56",
+      "route": "partially_georeferenced",
+      "sourcePdf": "data/documents/bplans/I-56--plan_sheet.pdf",
+      "reason": "OVG Berlin-Brandenburg judgment OVG 2 A 20.08 invalidated the I-56 public-park designation north of the transverse traffic area. Current ALKIS parcels 563 and 564 match that northern extent and are routed to unresolved section 34/35 assessment; parcel 512 remains controlled by the surviving southern plan extent. Internal land-use and dimensional zones remain unresolved."
+    }
+  ]
+}

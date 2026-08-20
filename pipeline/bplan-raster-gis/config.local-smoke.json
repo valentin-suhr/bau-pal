@@ -1,0 +1,33 @@
+{
+  "plan_key": "I-8-local-smoke",
+  "input_pdf": "../../data/documents/bplans/I-8--plan_sheet.pdf",
+  "page": 1,
+  "dpi": 72,
+  "crs": "EPSG:25833",
+  "output_dir": "../../output/raster-pipeline/local-smoke-I-8",
+  "ocr_language": "deu+eng",
+  "ocr_engine": "auto",
+  "gcps_csv": "gcps.i8-local-smoke.csv",
+  "official_scope": null,
+  "alkis_parcels": null,
+  "alkis_layer": null,
+  "segmentation": {
+    "clusters": 8,
+    "device": "auto",
+    "sam_prompts": null,
+    "classes": [
+      {
+        "name": "public_green_candidate",
+        "cluster_ids": [7],
+        "min_area_sqm": 20,
+        "simplify_m": 0.5,
+        "method": "lab_kmeans",
+        "confidence": "low"
+      }
+    ]
+  },
+  "qa": {
+    "max_rms_m": 2.0,
+    "allow_high_rms": false
+  }
+}

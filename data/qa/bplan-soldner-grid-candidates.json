@@ -1,0 +1,1464 @@
+{
+  "generatedAt": "2026-08-01T16:21:10.400Z",
+  "sourceQueue": "/Users/valentinsuhr/Documents/Competition/baugruppe-dashboard/data/qa/bplan-zone-review-queue.json",
+  "methodology": "OCR triage only: values from 15000 through 35000 are grouped into runs spaced exactly 100 units. Two runs of at least three labels indicate an unreviewed two-axis coordinate sequence, not proof of a machine-detectable grid: axis identity, line geometry, rotation, crop, labels and the legal sheet all require visual validation.",
+  "summary": {
+    "manual_reviewed_requires_internal_zone_trace": 20,
+    "no_extracted_sheet_text": 50,
+    "no_regular_grid_sequence": 95,
+    "possible_single_axis_ocr": 23,
+    "two_axis_coordinate_sequence_unreviewed": 14
+  },
+  "rows": [
+    {
+      "plan_key": "VIII-B",
+      "status": "no_regular_grid_sequence",
+      "text_path": "data/documents/bplan-text-priority-ocr/VIII-B--plan_sheet.txt",
+      "coordinate_runs": []
+    },
+    {
+      "plan_key": "7-37Bi",
+      "status": "no_regular_grid_sequence",
+      "text_path": "data/documents/bplan-text-priority-ocr/7-37Bi--plan_sheet.txt",
+      "coordinate_runs": []
+    },
+    {
+      "plan_key": "7-37Be",
+      "status": "no_regular_grid_sequence",
+      "text_path": "data/documents/bplan-text-priority-ocr/7-37Be--plan_sheet.txt",
+      "coordinate_runs": []
+    },
+    {
+      "plan_key": "7-37Bd",
+      "status": "no_regular_grid_sequence",
+      "text_path": "data/documents/bplan-text-priority-ocr/7-37Bd--plan_sheet.txt",
+      "coordinate_runs": []
+    },
+    {
+      "plan_key": "VIII-422",
+      "status": "no_extracted_sheet_text"
+    },
+    {
+      "plan_key": "VIII-B11b",
+      "status": "no_extracted_sheet_text"
+    },
+    {
+      "plan_key": "XIV-B1",
+      "status": "no_regular_grid_sequence",
+      "text_path": "data/documents/bplan-text-priority-ocr/XIV-B1--plan_sheet.txt",
+      "coordinate_runs": []
+    },
+    {
+      "plan_key": "IX-195",
+      "status": "no_extracted_sheet_text"
+    },
+    {
+      "plan_key": "VIII-429a",
+      "status": "no_extracted_sheet_text"
+    },
+    {
+      "plan_key": "12-7B",
+      "status": "no_regular_grid_sequence",
+      "text_path": "data/documents/bplan-text-priority-ocr/12-7B--plan_sheet.txt",
+      "coordinate_runs": []
+    },
+    {
+      "plan_key": "11-14a",
+      "status": "no_regular_grid_sequence",
+      "text_path": "data/documents/bplan-text/11-14a--plan_sheet.txt",
+      "coordinate_runs": []
+    },
+    {
+      "plan_key": "VIII-25",
+      "status": "no_regular_grid_sequence",
+      "text_path": "data/documents/bplan-text/VIII-25--plan_sheet.txt",
+      "coordinate_runs": []
+    },
+    {
+      "plan_key": "XIV-B2",
+      "status": "no_regular_grid_sequence",
+      "text_path": "data/documents/bplan-text/XIV-B2--plan_sheet.txt",
+      "coordinate_runs": []
+    },
+    {
+      "plan_key": "XVI-21",
+      "status": "no_regular_grid_sequence",
+      "text_path": "data/documents/bplan-text-priority-ocr/XVI-21--plan_sheet.txt",
+      "coordinate_runs": []
+    },
+    {
+      "plan_key": "IX-193",
+      "status": "no_regular_grid_sequence",
+      "text_path": "data/documents/bplan-text/IX-193--plan_sheet.txt",
+      "coordinate_runs": []
+    },
+    {
+      "plan_key": "XII-113",
+      "status": "no_regular_grid_sequence",
+      "text_path": "data/documents/bplan-text-priority-ocr/XII-113--plan_sheet.txt",
+      "coordinate_runs": []
+    },
+    {
+      "plan_key": "XII-301",
+      "status": "no_regular_grid_sequence",
+      "text_path": "data/documents/bplan-text-priority-ocr/XII-301--plan_sheet.txt",
+      "coordinate_runs": []
+    },
+    {
+      "plan_key": "XXII-B1",
+      "status": "no_regular_grid_sequence",
+      "text_path": "data/documents/bplan-text/XXII-B1--plan_sheet.txt",
+      "coordinate_runs": []
+    },
+    {
+      "plan_key": "XIX-48b",
+      "status": "no_extracted_sheet_text"
+    },
+    {
+      "plan_key": "X-B1c",
+      "status": "no_regular_grid_sequence",
+      "text_path": "data/documents/bplan-text-priority-ocr/X-B1c--plan_sheet.txt",
+      "coordinate_runs": []
+    },
+    {
+      "plan_key": "XIX-40j",
+      "status": "no_regular_grid_sequence",
+      "text_path": "data/documents/bplan-text/XIX-40j--plan_sheet.txt",
+      "coordinate_runs": []
+    },
+    {
+      "plan_key": "XIV-36-1",
+      "status": "no_regular_grid_sequence",
+      "text_path": "data/documents/bplan-text/XIV-36-1--plan_sheet.txt",
+      "coordinate_runs": []
+    },
+    {
+      "plan_key": "XVIII-24-3",
+      "status": "no_regular_grid_sequence",
+      "text_path": "data/documents/bplan-text/XVIII-24-3--plan_sheet.txt",
+      "coordinate_runs": []
+    },
+    {
+      "plan_key": "XV-53a",
+      "status": "no_regular_grid_sequence",
+      "text_path": "data/documents/bplan-text/XV-53a--plan_sheet.txt",
+      "coordinate_runs": []
+    },
+    {
+      "plan_key": "X-B2e",
+      "status": "no_regular_grid_sequence",
+      "text_path": "data/documents/bplan-text/X-B2e--plan_sheet.txt",
+      "coordinate_runs": []
+    },
+    {
+      "plan_key": "XIX-40i",
+      "status": "no_regular_grid_sequence",
+      "text_path": "data/documents/bplan-text/XIX-40i--plan_sheet.txt",
+      "coordinate_runs": []
+    },
+    {
+      "plan_key": "XV-27a",
+      "status": "no_regular_grid_sequence",
+      "text_path": "data/documents/bplan-text/XV-27a--plan_sheet.txt",
+      "coordinate_runs": []
+    },
+    {
+      "plan_key": "IX-197",
+      "status": "no_regular_grid_sequence",
+      "text_path": "data/documents/bplan-text/IX-197--plan_sheet.txt",
+      "coordinate_runs": []
+    },
+    {
+      "plan_key": "X-B10",
+      "status": "no_regular_grid_sequence",
+      "text_path": "data/documents/bplan-text/X-B10--plan_sheet.txt",
+      "coordinate_runs": []
+    },
+    {
+      "plan_key": "VII-B",
+      "status": "no_regular_grid_sequence",
+      "text_path": "data/documents/bplan-text/VII-B--plan_sheet.txt",
+      "coordinate_runs": []
+    },
+    {
+      "plan_key": "XV-70a",
+      "status": "no_regular_grid_sequence",
+      "text_path": "data/documents/bplan-text/XV-70a--plan_sheet.txt",
+      "coordinate_runs": []
+    },
+    {
+      "plan_key": "XXI-32c",
+      "status": "no_extracted_sheet_text"
+    },
+    {
+      "plan_key": "VII-E",
+      "status": "no_regular_grid_sequence",
+      "text_path": "data/documents/bplan-text/VII-E--plan_sheet.txt",
+      "coordinate_runs": []
+    },
+    {
+      "plan_key": "IX-196",
+      "status": "no_regular_grid_sequence",
+      "text_path": "data/documents/bplan-text/IX-196--plan_sheet.txt",
+      "coordinate_runs": []
+    },
+    {
+      "plan_key": "X-B12",
+      "status": "no_regular_grid_sequence",
+      "text_path": "data/documents/bplan-text/X-B12--plan_sheet.txt",
+      "coordinate_runs": []
+    },
+    {
+      "plan_key": "XXIII-27e",
+      "status": "no_extracted_sheet_text"
+    },
+    {
+      "plan_key": "XXI-2",
+      "status": "no_extracted_sheet_text"
+    },
+    {
+      "plan_key": "XIV-7-1",
+      "status": "no_regular_grid_sequence",
+      "text_path": "data/documents/bplan-text/XIV-7-1--plan_sheet.txt",
+      "coordinate_runs": []
+    },
+    {
+      "plan_key": "XX-25m",
+      "status": "no_regular_grid_sequence",
+      "text_path": "data/documents/bplan-text/XX-25m--plan_sheet.txt",
+      "coordinate_runs": []
+    },
+    {
+      "plan_key": "XV-53b",
+      "status": "no_regular_grid_sequence",
+      "text_path": "data/documents/bplan-text/XV-53b--plan_sheet.txt",
+      "coordinate_runs": []
+    },
+    {
+      "plan_key": "XV-45",
+      "status": "no_regular_grid_sequence",
+      "text_path": "data/documents/bplan-text/XV-45--plan_sheet.txt",
+      "coordinate_runs": []
+    },
+    {
+      "plan_key": "XX-25k",
+      "status": "no_extracted_sheet_text"
+    },
+    {
+      "plan_key": "II-B3",
+      "status": "no_regular_grid_sequence",
+      "text_path": "data/documents/bplan-text/II-B3--plan_sheet.txt",
+      "coordinate_runs": []
+    },
+    {
+      "plan_key": "5-109",
+      "status": "no_regular_grid_sequence",
+      "text_path": "data/documents/bplan-text/5-109--plan_sheet.txt",
+      "coordinate_runs": []
+    },
+    {
+      "plan_key": "XX-25q",
+      "status": "no_extracted_sheet_text"
+    },
+    {
+      "plan_key": "XIV-272-1",
+      "status": "no_regular_grid_sequence",
+      "text_path": "data/documents/bplan-text/XIV-272-1--plan_sheet.txt",
+      "coordinate_runs": []
+    },
+    {
+      "plan_key": "XX-42",
+      "status": "no_extracted_sheet_text"
+    },
+    {
+      "plan_key": "X-B7",
+      "status": "no_extracted_sheet_text"
+    },
+    {
+      "plan_key": "XIV-7/2",
+      "status": "no_extracted_sheet_text"
+    },
+    {
+      "plan_key": "XXIII-27d",
+      "status": "no_extracted_sheet_text"
+    },
+    {
+      "plan_key": "XVIII-20a",
+      "status": "no_extracted_sheet_text"
+    },
+    {
+      "plan_key": "IX-194",
+      "status": "no_regular_grid_sequence",
+      "text_path": "data/documents/bplan-text/IX-194--plan_sheet.txt",
+      "coordinate_runs": []
+    },
+    {
+      "plan_key": "XXII-33",
+      "status": "no_regular_grid_sequence",
+      "text_path": "data/documents/bplan-text/XXII-33--plan_sheet.txt",
+      "coordinate_runs": []
+    },
+    {
+      "plan_key": "IV-2c",
+      "status": "no_extracted_sheet_text"
+    },
+    {
+      "plan_key": "X-B18",
+      "status": "no_extracted_sheet_text"
+    },
+    {
+      "plan_key": "XX-22",
+      "status": "no_extracted_sheet_text"
+    },
+    {
+      "plan_key": "X-146",
+      "status": "no_extracted_sheet_text"
+    },
+    {
+      "plan_key": "XXIII-27a",
+      "status": "no_extracted_sheet_text"
+    },
+    {
+      "plan_key": "X-B2c",
+      "status": "no_extracted_sheet_text"
+    },
+    {
+      "plan_key": "X-73",
+      "status": "no_extracted_sheet_text"
+    },
+    {
+      "plan_key": "XX-25n",
+      "status": "no_extracted_sheet_text"
+    },
+    {
+      "plan_key": "XX-182a",
+      "status": "no_extracted_sheet_text"
+    },
+    {
+      "plan_key": "XX-25t",
+      "status": "no_extracted_sheet_text"
+    },
+    {
+      "plan_key": "X-64",
+      "status": "no_extracted_sheet_text"
+    },
+    {
+      "plan_key": "XXI-31c",
+      "status": "no_extracted_sheet_text"
+    },
+    {
+      "plan_key": "VIII-237",
+      "status": "no_extracted_sheet_text"
+    },
+    {
+      "plan_key": "4-21",
+      "status": "no_regular_grid_sequence",
+      "text_path": "data/documents/bplan-text/4-21--plan_sheet.txt",
+      "coordinate_runs": []
+    },
+    {
+      "plan_key": "XIV-272",
+      "status": "no_extracted_sheet_text"
+    },
+    {
+      "plan_key": "XVI-58",
+      "status": "no_extracted_sheet_text"
+    },
+    {
+      "plan_key": "XXIII-27c",
+      "status": "no_extracted_sheet_text"
+    },
+    {
+      "plan_key": "XVII-50aa",
+      "status": "no_extracted_sheet_text"
+    },
+    {
+      "plan_key": "XX-25e",
+      "status": "no_extracted_sheet_text"
+    },
+    {
+      "plan_key": "XVII-50aba",
+      "status": "no_regular_grid_sequence",
+      "text_path": "data/documents/bplan-text/XVII-50aba--plan_sheet.txt",
+      "coordinate_runs": []
+    },
+    {
+      "plan_key": "II-B2",
+      "status": "no_regular_grid_sequence",
+      "text_path": "data/documents/bplan-text/II-B2--plan_sheet.txt",
+      "coordinate_runs": []
+    },
+    {
+      "plan_key": "XIV-287c-1",
+      "status": "no_regular_grid_sequence",
+      "text_path": "data/documents/bplan-text/XIV-287c-1--plan_sheet.txt",
+      "coordinate_runs": []
+    },
+    {
+      "plan_key": "XX-25w",
+      "status": "no_extracted_sheet_text"
+    },
+    {
+      "plan_key": "8-36",
+      "status": "no_regular_grid_sequence",
+      "text_path": "data/documents/bplan-text/8-36--plan_sheet.txt",
+      "coordinate_runs": []
+    },
+    {
+      "plan_key": "XV-46",
+      "status": "no_extracted_sheet_text"
+    },
+    {
+      "plan_key": "XX-25c",
+      "status": "no_extracted_sheet_text"
+    },
+    {
+      "plan_key": "VIII-356",
+      "status": "no_regular_grid_sequence",
+      "text_path": "data/documents/bplan-text/VIII-356--plan_sheet.txt",
+      "coordinate_runs": []
+    },
+    {
+      "plan_key": "XV-38",
+      "status": "no_extracted_sheet_text"
+    },
+    {
+      "plan_key": "VIII-133",
+      "status": "no_regular_grid_sequence",
+      "text_path": "data/documents/bplan-text/VIII-133--plan_sheet.txt",
+      "coordinate_runs": []
+    },
+    {
+      "plan_key": "XIV-274aa",
+      "status": "no_regular_grid_sequence",
+      "text_path": "data/documents/bplan-text/XIV-274aa--plan_sheet.txt",
+      "coordinate_runs": []
+    },
+    {
+      "plan_key": "6-2B",
+      "status": "no_extracted_sheet_text"
+    },
+    {
+      "plan_key": "VIII-E",
+      "status": "no_regular_grid_sequence",
+      "text_path": "data/documents/bplan-text/VIII-E--plan_sheet.txt",
+      "coordinate_runs": []
+    },
+    {
+      "plan_key": "IX-187",
+      "status": "no_regular_grid_sequence",
+      "text_path": "data/documents/bplan-text/IX-187--plan_sheet.txt",
+      "coordinate_runs": []
+    },
+    {
+      "plan_key": "X-29",
+      "status": "no_extracted_sheet_text"
+    },
+    {
+      "plan_key": "XXI-32b",
+      "status": "no_extracted_sheet_text"
+    },
+    {
+      "plan_key": "XXIII-25",
+      "status": "no_extracted_sheet_text"
+    },
+    {
+      "plan_key": "XXIII-26",
+      "status": "no_extracted_sheet_text"
+    },
+    {
+      "plan_key": "XX-111o",
+      "status": "no_extracted_sheet_text"
+    },
+    {
+      "plan_key": "XX-25a",
+      "status": "no_extracted_sheet_text"
+    },
+    {
+      "plan_key": "XX-25g",
+      "status": "no_extracted_sheet_text"
+    },
+    {
+      "plan_key": "XII-132",
+      "status": "no_extracted_sheet_text"
+    },
+    {
+      "plan_key": "X-9a",
+      "status": "no_extracted_sheet_text"
+    },
+    {
+      "plan_key": "XX-25j",
+      "status": "no_extracted_sheet_text"
+    },
+    {
+      "plan_key": "X-129",
+      "status": "no_extracted_sheet_text"
+    },
+    {
+      "plan_key": "1-19",
+      "status": "no_regular_grid_sequence",
+      "text_path": "data/documents/bplan-text/1-19--plan_sheet.txt",
+      "coordinate_runs": []
+    },
+    {
+      "plan_key": "1-40a",
+      "status": "no_regular_grid_sequence",
+      "text_path": "data/documents/bplan-text/1-40a--plan_sheet.txt",
+      "coordinate_runs": []
+    },
+    {
+      "plan_key": "I-B4a",
+      "status": "no_regular_grid_sequence",
+      "text_path": "data/documents/bplan-text/I-B4a--plan_sheet.txt",
+      "coordinate_runs": []
+    },
+    {
+      "plan_key": "1-18B",
+      "status": "possible_single_axis_ocr",
+      "text_path": "data/documents/bplan-text/1-18B--plan_sheet.txt",
+      "coordinate_runs": [
+        [
+          23000,
+          23100,
+          23200,
+          23300,
+          23400,
+          23500
+        ]
+      ]
+    },
+    {
+      "plan_key": "I-209",
+      "status": "no_regular_grid_sequence",
+      "text_path": "data/documents/bplan-text/I-209--plan_sheet.txt",
+      "coordinate_runs": []
+    },
+    {
+      "plan_key": "1-67VE",
+      "status": "possible_single_axis_ocr",
+      "text_path": "data/documents/bplan-text/1-67VE--plan_sheet.txt",
+      "coordinate_runs": [
+        [
+          33533,
+          33633,
+          33733
+        ]
+      ]
+    },
+    {
+      "plan_key": "II-B1",
+      "status": "no_regular_grid_sequence",
+      "text_path": "data/documents/bplan-text/II-B1--plan_sheet.txt",
+      "coordinate_runs": []
+    },
+    {
+      "plan_key": "1-52B",
+      "status": "manual_reviewed_requires_internal_zone_trace",
+      "source_pdf": "data/documents/bplans/1-52B--plan_sheet.pdf",
+      "reason": "The reviewed sheet contains a broad WA area and separate street-traffic land across 32 current controlling parcels. Its printed Soldner coordinates are carried by rotated marginal ticks rather than long axis-aligned grid lines, so the automatic regular-grid detector is not applicable; manual control registration and the internal WA/traffic boundary are required before parcel-wide use can be promoted."
+    },
+    {
+      "plan_key": "I-B5ca",
+      "status": "manual_reviewed_requires_internal_zone_trace",
+      "source_pdf": "data/documents/bplans/I-B5ca--plan_sheet.pdf",
+      "reason": "The reviewed sheet separates WA and WA1, WB1 and WB2, a hospital special area, a Jewish-community-centre area and street-traffic land across 32 current controlling parcels. Its Soldner values are printed at rotated marginal ticks rather than as long axis-aligned grid lines, so manual control registration and full internal zone tracing are required before any parcel-wide use or restriction can be promoted."
+    },
+    {
+      "plan_key": "I-39",
+      "status": "manual_reviewed_requires_internal_zone_trace",
+      "source_pdf": "data/documents/bplans/I-39--plan_sheet.pdf",
+      "reason": "The reviewed sheet separates WA, MK, a children's day-care and gymnasium area, culture, public park, traffic-calmed land, ordinary street land and several height/building-envelope subareas across 31 current controlling parcels. Its Soldner coordinates are shown as rotated marginal ticks, so manual registration and full internal zone tracing are required before parcel rules can be promoted."
+    },
+    {
+      "plan_key": "1-54",
+      "status": "two_axis_coordinate_sequence_unreviewed",
+      "text_path": "data/documents/bplan-text/1-54--plan_sheet.txt",
+      "coordinate_runs": [
+        [
+          23100,
+          23200,
+          23300,
+          23400
+        ],
+        [
+          24500,
+          24600,
+          24700,
+          24800
+        ]
+      ]
+    },
+    {
+      "plan_key": "I-41",
+      "status": "two_axis_coordinate_sequence_unreviewed",
+      "text_path": "data/documents/bplan-text/I-41--plan_sheet.txt",
+      "coordinate_runs": [
+        [
+          23900,
+          24000,
+          24100,
+          24200
+        ],
+        [
+          22000,
+          22100,
+          22200
+        ]
+      ]
+    },
+    {
+      "plan_key": "I-B5d",
+      "status": "possible_single_axis_ocr",
+      "text_path": "data/documents/bplan-text/I-B5d--plan_sheet.txt",
+      "coordinate_runs": [
+        [
+          21900,
+          22000,
+          22100
+        ]
+      ]
+    },
+    {
+      "plan_key": "II-E",
+      "status": "no_regular_grid_sequence",
+      "text_path": "data/documents/bplan-text/II-E--plan_sheet.txt",
+      "coordinate_runs": []
+    },
+    {
+      "plan_key": "1-58",
+      "status": "two_axis_coordinate_sequence_unreviewed",
+      "text_path": "data/documents/bplan-text/1-58--plan_sheet.txt",
+      "coordinate_runs": [
+        [
+          22500,
+          22600,
+          22700,
+          22800
+        ],
+        [
+          24300,
+          24400,
+          24500
+        ]
+      ]
+    },
+    {
+      "plan_key": "I-18",
+      "status": "two_axis_coordinate_sequence_unreviewed",
+      "text_path": "data/documents/bplan-text/I-18--plan_sheet.txt",
+      "coordinate_runs": [
+        [
+          22500,
+          22600,
+          22700,
+          22800,
+          22900,
+          23000
+        ],
+        [
+          24600,
+          24700,
+          24800,
+          24900,
+          25000
+        ]
+      ]
+    },
+    {
+      "plan_key": "I-B5v",
+      "status": "possible_single_axis_ocr",
+      "text_path": "data/documents/bplan-text/I-B5v--plan_sheet.txt",
+      "coordinate_runs": [
+        [
+          22000,
+          22100,
+          22200
+        ]
+      ]
+    },
+    {
+      "plan_key": "I-B5a",
+      "status": "two_axis_coordinate_sequence_unreviewed",
+      "text_path": "data/documents/bplan-text/I-B5a--plan_sheet.txt",
+      "coordinate_runs": [
+        [
+          23900,
+          24000,
+          24100,
+          24200,
+          24300
+        ],
+        [
+          22100,
+          22200,
+          22300
+        ]
+      ]
+    },
+    {
+      "plan_key": "1-62b",
+      "status": "possible_single_axis_ocr",
+      "text_path": "data/documents/bplan-text/1-62b--plan_sheet.txt",
+      "coordinate_runs": [
+        [
+          22200,
+          22300,
+          22400,
+          22500,
+          22600,
+          22700,
+          22800,
+          22900,
+          23000,
+          23100,
+          23200
+        ]
+      ]
+    },
+    {
+      "plan_key": "I-B5m",
+      "status": "two_axis_coordinate_sequence_unreviewed",
+      "text_path": "data/documents/bplan-text/I-B5m--plan_sheet.txt",
+      "coordinate_runs": [
+        [
+          21900,
+          22000,
+          22100,
+          22200
+        ],
+        [
+          24600,
+          24700,
+          24800,
+          24900
+        ]
+      ]
+    },
+    {
+      "plan_key": "1-62a",
+      "status": "no_extracted_sheet_text"
+    },
+    {
+      "plan_key": "I-B5u",
+      "status": "two_axis_coordinate_sequence_unreviewed",
+      "text_path": "data/documents/bplan-text/I-B5u--plan_sheet.txt",
+      "coordinate_runs": [
+        [
+          24900,
+          25000,
+          25100,
+          25200
+        ],
+        [
+          21800,
+          21900,
+          22000
+        ]
+      ]
+    },
+    {
+      "plan_key": "I-218",
+      "status": "no_regular_grid_sequence",
+      "text_path": "data/documents/bplan-text/I-218--plan_sheet.txt",
+      "coordinate_runs": []
+    },
+    {
+      "plan_key": "I-B5b",
+      "status": "possible_single_axis_ocr",
+      "text_path": "data/documents/bplan-text/I-B5b--plan_sheet.txt",
+      "coordinate_runs": [
+        [
+          24200,
+          24300,
+          24400,
+          24500
+        ]
+      ]
+    },
+    {
+      "plan_key": "I-B5l",
+      "status": "two_axis_coordinate_sequence_unreviewed",
+      "text_path": "data/documents/bplan-text/I-B5l--plan_sheet.txt",
+      "coordinate_runs": [
+        [
+          24600,
+          24700,
+          24800,
+          24900
+        ],
+        [
+          22100,
+          22200,
+          22300
+        ]
+      ]
+    },
+    {
+      "plan_key": "II-B4",
+      "status": "no_regular_grid_sequence",
+      "text_path": "data/documents/bplan-text/II-B4--plan_sheet.txt",
+      "coordinate_runs": []
+    },
+    {
+      "plan_key": "1-17B",
+      "status": "two_axis_coordinate_sequence_unreviewed",
+      "text_path": "data/documents/bplan-text/1-17B--plan_sheet.txt",
+      "coordinate_runs": [
+        [
+          23100,
+          23200,
+          23300,
+          23400
+        ],
+        [
+          22700,
+          22800,
+          22900
+        ]
+      ]
+    },
+    {
+      "plan_key": "I-208",
+      "status": "two_axis_coordinate_sequence_unreviewed",
+      "text_path": "data/documents/bplan-text/I-208--plan_sheet.txt",
+      "coordinate_runs": [
+        [
+          20900,
+          21000,
+          21100,
+          21200
+        ],
+        [
+          24400,
+          24500,
+          24600,
+          24700
+        ]
+      ]
+    },
+    {
+      "plan_key": "1-4",
+      "status": "possible_single_axis_ocr",
+      "text_path": "data/documents/bplan-text/1-4--plan_sheet.txt",
+      "coordinate_runs": [
+        [
+          21400,
+          21500,
+          21600
+        ]
+      ]
+    },
+    {
+      "plan_key": "I-202b",
+      "status": "no_regular_grid_sequence",
+      "text_path": "data/documents/bplan-text/I-202b--plan_sheet.txt",
+      "coordinate_runs": []
+    },
+    {
+      "plan_key": "1-6B",
+      "status": "two_axis_coordinate_sequence_unreviewed",
+      "text_path": "data/documents/bplan-text/1-6B--plan_sheet.txt",
+      "coordinate_runs": [
+        [
+          20400,
+          20500,
+          20600,
+          20700
+        ],
+        [
+          25400,
+          25500,
+          25600
+        ]
+      ]
+    },
+    {
+      "plan_key": "I-204",
+      "status": "two_axis_coordinate_sequence_unreviewed",
+      "text_path": "data/documents/bplan-text/I-204--plan_sheet.txt",
+      "coordinate_runs": [
+        [
+          24400,
+          24500,
+          24600,
+          24700
+        ],
+        [
+          20500,
+          20600,
+          20700
+        ]
+      ]
+    },
+    {
+      "plan_key": "I-52a",
+      "status": "possible_single_axis_ocr",
+      "text_path": "data/documents/bplan-text/I-52a--plan_sheet.txt",
+      "coordinate_runs": [
+        [
+          22900,
+          23000,
+          23100,
+          23200,
+          23300,
+          23400,
+          23500,
+          23600,
+          23700,
+          23800,
+          23900,
+          24000
+        ]
+      ]
+    },
+    {
+      "plan_key": "I-B5s",
+      "status": "two_axis_coordinate_sequence_unreviewed",
+      "text_path": "data/documents/bplan-text/I-B5s--plan_sheet.txt",
+      "coordinate_runs": [
+        [
+          22000,
+          22100,
+          22200
+        ],
+        [
+          25000,
+          25100,
+          25200
+        ]
+      ]
+    },
+    {
+      "plan_key": "1-13B",
+      "status": "possible_single_axis_ocr",
+      "text_path": "data/documents/bplan-text/1-13B--plan_sheet.txt",
+      "coordinate_runs": [
+        [
+          25000,
+          25100,
+          25200
+        ]
+      ]
+    },
+    {
+      "plan_key": "I-B5g",
+      "status": "no_regular_grid_sequence",
+      "text_path": "data/documents/bplan-text/I-B5g--plan_sheet.txt",
+      "coordinate_runs": []
+    },
+    {
+      "plan_key": "II-18",
+      "status": "no_regular_grid_sequence",
+      "text_path": "data/documents/bplan-text/II-18--plan_sheet.txt",
+      "coordinate_runs": []
+    },
+    {
+      "plan_key": "1-20",
+      "status": "possible_single_axis_ocr",
+      "text_path": "data/documents/bplan-text/1-20--plan_sheet.txt",
+      "coordinate_runs": [
+        [
+          20100,
+          20200,
+          20300
+        ]
+      ]
+    },
+    {
+      "plan_key": "I-16",
+      "status": "no_regular_grid_sequence",
+      "text_path": "data/documents/bplan-text/I-16--plan_sheet.txt",
+      "coordinate_runs": []
+    },
+    {
+      "plan_key": "I-216",
+      "status": "two_axis_coordinate_sequence_unreviewed",
+      "text_path": "data/documents/bplan-text/I-216--plan_sheet.txt",
+      "coordinate_runs": [
+        [
+          23600,
+          23700,
+          23800,
+          23900,
+          24000
+        ],
+        [
+          20100,
+          20200,
+          20300,
+          20400
+        ]
+      ]
+    },
+    {
+      "plan_key": "I-B5t",
+      "status": "possible_single_axis_ocr",
+      "text_path": "data/documents/bplan-text/I-B5t--plan_sheet.txt",
+      "coordinate_runs": [
+        [
+          24900,
+          25000,
+          25100
+        ]
+      ]
+    },
+    {
+      "plan_key": "1-14",
+      "status": "no_regular_grid_sequence",
+      "text_path": "data/documents/bplan-text/1-14--plan_sheet.txt",
+      "coordinate_runs": []
+    },
+    {
+      "plan_key": "1-64aVE",
+      "status": "no_regular_grid_sequence",
+      "text_path": "data/documents/bplan-text/1-64aVE--plan_sheet.txt",
+      "coordinate_runs": []
+    },
+    {
+      "plan_key": "I-213",
+      "status": "no_regular_grid_sequence",
+      "text_path": "data/documents/bplan-text/I-213--plan_sheet.txt",
+      "coordinate_runs": []
+    },
+    {
+      "plan_key": "I-B5h",
+      "status": "no_regular_grid_sequence",
+      "text_path": "data/documents/bplan-text/I-B5h--plan_sheet.txt",
+      "coordinate_runs": []
+    },
+    {
+      "plan_key": "I-B5k",
+      "status": "possible_single_axis_ocr",
+      "text_path": "data/documents/bplan-text/I-B5k--plan_sheet.txt",
+      "coordinate_runs": [
+        [
+          22100,
+          22200,
+          22300
+        ]
+      ]
+    },
+    {
+      "plan_key": "1-37",
+      "status": "possible_single_axis_ocr",
+      "text_path": "data/documents/bplan-text/1-37--plan_sheet.txt",
+      "coordinate_runs": [
+        [
+          15700,
+          15800,
+          15900
+        ]
+      ]
+    },
+    {
+      "plan_key": "1-8Ba",
+      "status": "possible_single_axis_ocr",
+      "text_path": "data/documents/bplan-text/1-8Ba--plan_sheet.txt",
+      "coordinate_runs": [
+        [
+          24500,
+          24600,
+          24700,
+          24800
+        ]
+      ]
+    },
+    {
+      "plan_key": "I-B5p",
+      "status": "possible_single_axis_ocr",
+      "text_path": "data/documents/bplan-text/I-B5p--plan_sheet.txt",
+      "coordinate_runs": [
+        [
+          22200,
+          22300,
+          22400
+        ]
+      ]
+    },
+    {
+      "plan_key": "I-B5r",
+      "status": "possible_single_axis_ocr",
+      "text_path": "data/documents/bplan-text/I-B5r--plan_sheet.txt",
+      "coordinate_runs": [
+        [
+          25000,
+          25100,
+          25200
+        ]
+      ]
+    },
+    {
+      "plan_key": "I-B5o",
+      "status": "possible_single_axis_ocr",
+      "text_path": "data/documents/bplan-text/I-B5o--plan_sheet.txt",
+      "coordinate_runs": [
+        [
+          25000,
+          25100,
+          25200
+        ]
+      ]
+    },
+    {
+      "plan_key": "1-42B",
+      "status": "no_regular_grid_sequence",
+      "text_path": "data/documents/bplan-text/1-42B--plan_sheet.txt",
+      "coordinate_runs": []
+    },
+    {
+      "plan_key": "I-B5i",
+      "status": "no_regular_grid_sequence",
+      "text_path": "data/documents/bplan-text/I-B5i--plan_sheet.txt",
+      "coordinate_runs": []
+    },
+    {
+      "plan_key": "1-11B",
+      "status": "possible_single_axis_ocr",
+      "text_path": "data/documents/bplan-text/1-11B--plan_sheet.txt",
+      "coordinate_runs": [
+        [
+          20600,
+          20700,
+          20800
+        ]
+      ]
+    },
+    {
+      "plan_key": "I-208-1",
+      "status": "no_regular_grid_sequence",
+      "text_path": "data/documents/bplan-text/I-208-1--plan_sheet.txt",
+      "coordinate_runs": []
+    },
+    {
+      "plan_key": "I-214",
+      "status": "manual_reviewed_requires_internal_zone_trace",
+      "source_pdf": "data/documents/bplans/I-214--plan_sheet.pdf",
+      "reason": "A reviewed current-ALKIS overlay shows cadastral parcels crossing MK1/MK2, SO1 federal-government, SO2 state-representation, school/youth-club, substation and traffic zones. No broad parcel-wide use can be promoted; full internal zone geometry is required."
+    },
+    {
+      "plan_key": "I-B24b",
+      "status": "possible_single_axis_ocr",
+      "text_path": "data/documents/bplan-text/I-B24b--plan_sheet.txt",
+      "coordinate_runs": [
+        [
+          24000,
+          24100,
+          24200,
+          24300
+        ]
+      ]
+    },
+    {
+      "plan_key": "I-B5n",
+      "status": "no_regular_grid_sequence",
+      "text_path": "data/documents/bplan-text/I-B5n--plan_sheet.txt",
+      "coordinate_runs": []
+    },
+    {
+      "plan_key": "II-B5",
+      "status": "no_regular_grid_sequence",
+      "text_path": "data/documents/bplan-text/II-B5--plan_sheet.txt",
+      "coordinate_runs": []
+    },
+    {
+      "plan_key": "1-39",
+      "status": "possible_single_axis_ocr",
+      "text_path": "data/documents/bplan-text/1-39--plan_sheet.txt",
+      "coordinate_runs": [
+        [
+          22800,
+          22900,
+          23000
+        ]
+      ]
+    },
+    {
+      "plan_key": "I-210",
+      "status": "no_regular_grid_sequence",
+      "text_path": "data/documents/bplan-text/I-210--plan_sheet.txt",
+      "coordinate_runs": []
+    },
+    {
+      "plan_key": "I-45",
+      "status": "possible_single_axis_ocr",
+      "text_path": "data/documents/bplan-text/I-45--plan_sheet.txt",
+      "coordinate_runs": [
+        [
+          25300,
+          25400,
+          25500
+        ]
+      ]
+    },
+    {
+      "plan_key": "I-50",
+      "status": "no_regular_grid_sequence",
+      "text_path": "data/documents/bplan-text/I-50--plan_sheet.txt",
+      "coordinate_runs": []
+    },
+    {
+      "plan_key": "1-3B",
+      "status": "possible_single_axis_ocr",
+      "text_path": "data/documents/bplan-text/1-3B--plan_sheet.txt",
+      "coordinate_runs": [
+        [
+          25100,
+          25200,
+          25300
+        ]
+      ]
+    },
+    {
+      "plan_key": "I-11",
+      "status": "no_regular_grid_sequence",
+      "text_path": "data/documents/bplan-text/I-11--plan_sheet.txt",
+      "coordinate_runs": []
+    },
+    {
+      "plan_key": "I-207",
+      "status": "no_regular_grid_sequence",
+      "text_path": "data/documents/bplan-text/I-207--plan_sheet.txt",
+      "coordinate_runs": []
+    },
+    {
+      "plan_key": "I-215",
+      "status": "no_regular_grid_sequence",
+      "text_path": "data/documents/bplan-text/I-215--plan_sheet.txt",
+      "coordinate_runs": []
+    },
+    {
+      "plan_key": "II-6",
+      "status": "no_regular_grid_sequence",
+      "text_path": "data/documents/bplan-text/II-6--plan_sheet.txt",
+      "coordinate_runs": []
+    },
+    {
+      "plan_key": "II-8",
+      "status": "no_regular_grid_sequence",
+      "text_path": "data/documents/bplan-text/II-8--plan_sheet.txt",
+      "coordinate_runs": []
+    },
+    {
+      "plan_key": "I-202c",
+      "status": "no_regular_grid_sequence",
+      "text_path": "data/documents/bplan-text/I-202c--plan_sheet.txt",
+      "coordinate_runs": []
+    },
+    {
+      "plan_key": "I-B4ba",
+      "status": "no_regular_grid_sequence",
+      "text_path": "data/documents/bplan-text/I-B4ba--plan_sheet.txt",
+      "coordinate_runs": []
+    },
+    {
+      "plan_key": "I-B5e",
+      "status": "possible_single_axis_ocr",
+      "text_path": "data/documents/bplan-text/I-B5e--plan_sheet.txt",
+      "coordinate_runs": [
+        [
+          24700,
+          24800,
+          24900
+        ]
+      ]
+    },
+    {
+      "plan_key": "I-B5f",
+      "status": "no_regular_grid_sequence",
+      "text_path": "data/documents/bplan-text/I-B5f--plan_sheet.txt",
+      "coordinate_runs": []
+    },
+    {
+      "plan_key": "I-B5q",
+      "status": "no_regular_grid_sequence",
+      "text_path": "data/documents/bplan-text/I-B5q--plan_sheet.txt",
+      "coordinate_runs": []
+    },
+    {
+      "plan_key": "II-16",
+      "status": "no_regular_grid_sequence",
+      "text_path": "data/documents/bplan-text/II-16--plan_sheet.txt",
+      "coordinate_runs": []
+    },
+    {
+      "plan_key": "1-106",
+      "status": "no_regular_grid_sequence",
+      "text_path": "data/documents/bplan-text/1-106--plan_sheet.txt",
+      "coordinate_runs": []
+    },
+    {
+      "plan_key": "1-44VE",
+      "status": "no_regular_grid_sequence",
+      "text_path": "data/documents/bplan-text/1-44VE--plan_sheet.txt",
+      "coordinate_runs": []
+    },
+    {
+      "plan_key": "1-81",
+      "status": "no_regular_grid_sequence",
+      "text_path": "data/documents/bplan-text/1-81--plan_sheet.txt",
+      "coordinate_runs": []
+    },
+    {
+      "plan_key": "1-98",
+      "status": "no_regular_grid_sequence",
+      "text_path": "data/documents/bplan-text/1-98--plan_sheet.txt",
+      "coordinate_runs": []
+    },
+    {
+      "plan_key": "I-219",
+      "status": "no_regular_grid_sequence",
+      "text_path": "data/documents/bplan-text/I-219--plan_sheet.txt",
+      "coordinate_runs": []
+    },
+    {
+      "plan_key": "I-4",
+      "status": "no_regular_grid_sequence",
+      "text_path": "data/documents/bplan-text/I-4--plan_sheet.txt",
+      "coordinate_runs": []
+    },
+    {
+      "plan_key": "I-B4d",
+      "status": "no_regular_grid_sequence",
+      "text_path": "data/documents/bplan-text/I-B4d--plan_sheet.txt",
+      "coordinate_runs": []
+    },
+    {
+      "plan_key": "II-14",
+      "status": "no_regular_grid_sequence",
+      "text_path": "data/documents/bplan-text/II-14--plan_sheet.txt",
+      "coordinate_runs": []
+    },
+    {
+      "plan_key": "II-17",
+      "status": "no_regular_grid_sequence",
+      "text_path": "data/documents/bplan-text/II-17--plan_sheet.txt",
+      "coordinate_runs": []
+    },
+    {
+      "plan_key": "1-35a",
+      "status": "manual_reviewed_requires_internal_zone_trace",
+      "source_pdf": "data/documents/bplans/1-35a--plan_sheet.pdf",
+      "reason": "The cultural-facilities plan contains many protected building footprints, separate floor-area caps, traffic-calmed and pedestrian areas, and a subsidiary upper-storey envelope."
+    },
+    {
+      "plan_key": "1-5VE",
+      "status": "manual_reviewed_requires_internal_zone_trace",
+      "source_pdf": "data/documents/bplans/1-5VE--plan_sheet.pdf",
+      "reason": "The office/business project contains multiple building and underground-garage areas with GF 15,000 m², 9,650 m² and 28,000 m² caps and several relative-height subareas."
+    },
+    {
+      "plan_key": "I-206",
+      "status": "no_regular_grid_sequence",
+      "text_path": "data/documents/bplan-text/I-206--plan_sheet.txt",
+      "coordinate_runs": []
+    },
+    {
+      "plan_key": "1-109VE",
+      "status": "manual_reviewed_requires_internal_zone_trace",
+      "source_pdf": "data/documents/bplans/1-109VE--plan_sheet.pdf",
+      "reason": "Two current ALKIS parcels share the project area, its GF 20,600 m² cap and XI/V/XVIII storey-height subareas; the project-wide maximum must not be duplicated onto both parcel rows."
+    },
+    {
+      "plan_key": "1-2b",
+      "status": "manual_reviewed_requires_internal_zone_trace",
+      "source_pdf": "data/documents/bplans/1-2b--plan_sheet.pdf",
+      "reason": "Two current parcels intersect the MK block, arcade, street land and multiple vertically differentiated building envelopes; the applicable storeys cannot be assigned from the document summary."
+    },
+    {
+      "plan_key": "1-35ba",
+      "status": "no_regular_grid_sequence",
+      "text_path": "data/documents/bplan-text/1-35ba--plan_sheet.txt",
+      "coordinate_runs": []
+    },
+    {
+      "plan_key": "1-50VE",
+      "status": "manual_reviewed_requires_internal_zone_trace",
+      "source_pdf": "data/documents/bplans/1-50VE--plan_sheet.pdf",
+      "reason": "Two current parcels divide the spa/wellness project, connector, parking and T1-T4 auxiliary subareas; project-wide GRZ 0.41 and use constraints require parcel-zone allocation."
+    },
+    {
+      "plan_key": "1-72",
+      "status": "manual_reviewed_requires_internal_zone_trace",
+      "source_pdf": "data/documents/bplans/1-72--plan_sheet.pdf",
+      "reason": "The controlling parcel contains multiple WA building fields G1-G8, underground-garage areas, traffic land and different storey/height and acoustic subareas."
+    },
+    {
+      "plan_key": "I-211",
+      "status": "manual_reviewed_requires_internal_zone_trace",
+      "source_pdf": "data/documents/bplans/I-211--plan_sheet.pdf",
+      "reason": "The controlling parcel intersects SO Bundesregierung, public promenade, traffic areas and separate height/density subareas; parcel-wide GRZ, GFZ or height cannot be assigned without internal geometry."
+    },
+    {
+      "plan_key": "I-27",
+      "status": "manual_reviewed_requires_internal_zone_trace",
+      "source_pdf": "data/documents/bplans/I-27--plan_sheet.pdf",
+      "reason": "The plan contains two WA building fields with different storey markings, a public playground and street traffic land across the controlling cadastral geometry."
+    },
+    {
+      "plan_key": "I-40",
+      "status": "manual_reviewed_requires_internal_zone_trace",
+      "source_pdf": "data/documents/bplans/I-40--plan_sheet.pdf",
+      "reason": "The plan contains separate WA building areas, a public childcare-facility area and street traffic land across the controlling cadastral geometry."
+    },
+    {
+      "plan_key": "I-43a",
+      "status": "manual_reviewed_requires_internal_zone_trace",
+      "source_pdf": "data/documents/bplans/I-43a--plan_sheet.pdf",
+      "reason": "Two current parcels intersect MK blocks III A and III B, separately stated GF 6,900 m² and GF 23,000 m², several building envelopes and street land."
+    },
+    {
+      "plan_key": "I-B4bb",
+      "status": "manual_reviewed_requires_internal_zone_trace",
+      "source_pdf": "data/documents/bplans/I-B4bb--plan_sheet.pdf",
+      "reason": "The MK parcel is governed through two enlarged subsidiary drawings with different building/storey envelopes and street overhangs; document-level GFZ/storey mentions are not parcel-wide rules."
+    },
+    {
+      "plan_key": "I-B4ca",
+      "status": "manual_reviewed_requires_internal_zone_trace",
+      "source_pdf": "data/documents/bplans/I-B4ca--plan_sheet.pdf",
+      "reason": "The elongated MK plan contains areas A1-a through A11, separately capped residential floor areas, several height and building-envelope subareas, public playground and traffic land."
+    },
+    {
+      "plan_key": "II-11",
+      "status": "no_regular_grid_sequence",
+      "text_path": "data/documents/bplan-text/II-11--plan_sheet.txt",
+      "coordinate_runs": []
+    },
+    {
+      "plan_key": "1-92VE",
+      "status": "no_regular_grid_sequence",
+      "text_path": "data/documents/bplan-text/1-92VE--plan_sheet.txt",
+      "coordinate_runs": []
+    },
+    {
+      "plan_key": "1-94",
+      "status": "no_regular_grid_sequence",
+      "text_path": "data/documents/bplan-text/1-94--plan_sheet.txt",
+      "coordinate_runs": []
+    },
+    {
+      "plan_key": "I-218-1",
+      "status": "manual_reviewed_requires_internal_zone_trace",
+      "source_pdf": "data/documents/bplans/I-218-1--plan_sheet.pdf",
+      "reason": "The plan contains distinct SO religious-centre and archaeological-exhibition areas, private traffic/access areas and multiple absolute-height and building-envelope subareas."
+    },
+    {
+      "plan_key": "II-22",
+      "status": "manual_reviewed_requires_internal_zone_trace",
+      "source_pdf": "data/documents/bplans/II-22--plan_sheet.pdf",
+      "reason": "The MK site uses five subsidiary drawings for different floor-by-floor envelopes from the first through ninth full storeys, plus underground-garage and traffic areas."
+    },
+    {
+      "plan_key": "II-4",
+      "status": "manual_reviewed_requires_internal_zone_trace",
+      "source_pdf": "data/documents/bplans/II-4--plan_sheet.pdf",
+      "reason": "Only a 3.5 m² controlling intersection is present while the sheet contains public green space, water, road and two special-purpose public building footprints; a parcel rule cannot be inferred from the plan summary."
+    },
+    {
+      "plan_key": "II-4-1",
+      "status": "manual_reviewed_requires_internal_zone_trace",
+      "source_pdf": "data/documents/bplans/II-4-1--plan_sheet.pdf",
+      "reason": "Only a 124 m² controlling intersection is present while the sheet contains WA, a separately dimensioned circular building envelope and public parkland; exact zone intersection is required."
+    }
+  ]
+}

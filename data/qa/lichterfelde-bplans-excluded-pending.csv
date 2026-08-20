@@ -1,0 +1,22 @@
+planKey,title,status,planType,borough,scopeDescription,sourceFeatureId,sourceTimestamp
+6-4B,Bebauungsplan 6-4B,in_process,simple_bplan,Steglitz-Zehlendorf,"Ringstr., Drakestr. 57-69C, nördliche Grenze Grundstück Potsdamer Str. 10-11A, Potsdamer Str., Weddingenweg, Kadettenweg, Finkensteinallee und Paulinenstr.",a_bp_iv.0600004B,2026-08-01T07:53:43.753Z
+6-6B,Bebauungsplan 6-6B,in_process,simple_bplan,Steglitz-Zehlendorf,"Drakestr., Stubenrauchstr., Augustastr., Ringstr., Kommandantenstr., Friedrichstr., Köhlerstr. und Curtiusstr.",a_bp_iv.0600006B,2026-08-01T07:53:43.753Z
+6-7,Bebauungsplan 6-7,in_process,qualified_bplan,Steglitz-Zehlendorf,Heinrichstr. 8-9,a_bp_iv.0600007,2026-08-01T07:53:43.753Z
+6-8,Bebauungsplan 6-8,in_process,qualified_bplan,Steglitz-Zehlendorf,für die Grundstücke Hildburghauser Straße 224/234 C und 238/240 sowie Hochstraße 12-12 B.,a_bp_iv.0600008,2026-08-01T07:53:43.753Z
+6-12,Bebauungsplan 6-12,in_process,qualified_bplan,Steglitz-Zehlendorf,für die Grundstücke Goerzallee 189/195 und einen Abschnitt der Straße Am Stichkanal,a_bp_iv.0600012,2026-08-01T07:53:43.753Z
+6-17Bc,Bebauungsplan 6-17Bc,in_process,simple_bplan,Steglitz-Zehlendorf,"für die Grundstücke Lankwitzer Straße 10-12, Kaiser-Wilhelm- Straße 1/11, 17/31 und 4/54",a_bp_iv.0600017Bc,2026-08-01T07:53:43.753Z
+6-27,Bebauungsplan 6-27,in_process,qualified_bplan,Steglitz-Zehlendorf,Hindenburgdamm 1,a_bp_iv.0600027,2026-08-01T07:53:43.753Z
+6-38,Bebauungsplan 6-38,in_process,qualified_bplan,Steglitz-Zehlendorf,"Gelände zwischen Ostpreußendamm, Heinrichstr., Bahngelände, Hildburghauser Str. und Osdorfer Str. mit Ausnahme der Grundstücke Ostpreußendamm 137 und Heinrichstr. 8 sowie für einen Abschnitt der Heinrichstr.",a_bp_iv.0600038,2026-08-01T07:53:43.753Z
+6-41VE,Bebauungsplan 6-41VE,in_process,project_bplan,Steglitz-Zehlendorf,"umfasst zukünftig die an der Wismarer Str. und am Ostpreußendamm gelegene Teilflächen des Grundstücks  Ostpreußendamm 83, 83A,  Wismarer Str. 1/17, (Flurstück 90/2 Flur 5 der Gemarkung Lichterfelde)",a_bp_iv.0600041VE,2026-08-01T07:53:44.108Z
+6-42,Bebauungsplan 6-42,in_process,qualified_bplan,Steglitz-Zehlendorf,"für die zwischen dem Teltowkanal und dem Grundstück Ostpreußendamm 84 gelegene Teilfläche des Grundstücks Ostpreußendamm 83, 83A, Wismarer Str. 1/17 (Flurstück 4625 Flur 5 der Gemarkung Lichterfelde). KGA ""Eugen-Kleine-Brücke""",a_bp_iv.0600042,2026-08-01T07:53:44.108Z
+6-50,Bebauungsplan 6-50,in_process,qualified_bplan,Steglitz-Zehlendorf,"Hindenburgdamm 30, 31, Klingsorstr. 95A, 107, das Grundstück Hindenburgdamm 30A sowie einen Abschnitt der Brahmsstraße zwischen Klingsorstraße und Brahmstraße 31",a_bp_iv.0600050,2026-08-01T07:53:44.108Z
+7-37Bg,Bebauungsplan 7-37Bg,in_process,simple_bplan,Tempelhof-Schöneberg,"für Teilflächen im Plangebiet zwischen Trachenbergring, Trasse Berlin-Dresdner Bahn, Säntisstr., Nahmitzer Damm, Marienfelder Allee, Diedersdorfer Weg, Bezirksgrenze zum Landkreis Teltow-Fläming, Bezirksgrenze zum Bezirk Steglitz-Zehlendorf und Friedrichrodaer Str.",a_bp_iv.0700037Bg,2026-08-01T07:53:44.108Z
+X-102a,Bebauungsplan X-102a,in_process,qualified_bplan,Steglitz-Zehlendorf,"Beeskowdamm, Wupperstr.",a_bp_iv.0610102a,2026-08-01T07:53:44.108Z
+X-B20,Bebauungsplan X-B20,in_process,simple_bplan,Steglitz-Zehlendorf,"Limonenweg, Altensteinstr., Habelschwerdter Allee, Unter den Eichen, Botticherstr., Thielallee, Kaiserwerther Str.",a_bp_iv.0610000B20,2026-08-01T07:53:44.108Z
+XII-260,Bebauungsplan XII-260,in_process,qualified_bplan,Steglitz-Zehlendorf,"Goerzallee, Wupperstr., Dahlemer Weg",a_bp_iv.0612260,2026-08-01T07:53:44.108Z
+XII-268,Bebauungsplan XII-268,in_process,qualified_bplan,Steglitz-Zehlendorf,Kleingärten,a_bp_iv.0612268,2026-08-01T07:53:44.108Z
+XII-271,Bebauungsplan XII-271,in_process,qualified_bplan,Steglitz-Zehlendorf,"Wismarer Str. 19/21, und Grundbuch von Lichterfelde, Blatt 2774 (teilweise)",a_bp_iv.0612271,2026-08-01T07:53:44.108Z
+XII-275,Bebauungsplan XII-275,in_process,qualified_bplan,Steglitz-Zehlendorf,Kleingärten,a_bp_iv.0612275,2026-08-01T07:53:44.108Z
+XII-276,Bebauungsplan XII-276,in_process,qualified_bplan,Steglitz-Zehlendorf,Am Stichkanal 13/15,a_bp_iv.0612276,2026-08-01T07:53:44.108Z
+XII-277,Bebauungsplan XII-277,in_process,qualified_bplan,Steglitz-Zehlendorf,"Goerzallee 120/154, 156/188, Platz des 4. Juli",a_bp_iv.0612277,2026-08-01T07:53:44.108Z
+XII-298,Bebauungsplan XII-298,in_process,qualified_bplan,Steglitz-Zehlendorf,"Am Fichtenberg, Rothenburgstr.",a_bp_iv.0612298,2026-08-01T07:53:44.108Z
