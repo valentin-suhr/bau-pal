@@ -11,7 +11,11 @@ export type GlobeGeometry = {
 export type GlobeParcel = {
   id: string;
   geometry: GlobeGeometry;
+  centroidLng: number;
+  centroidLat: number;
   colour: string;
+  outlineColour: string;
+  completeDensityEvidence: boolean;
 };
 
 export type GlobeBuilding = {
@@ -48,6 +52,8 @@ type VectorLayer = {
   parcelMaterial: THREE.MeshBasicMaterial | null;
   outlines: THREE.LineSegments | null;
   outlineMaterial: THREE.LineBasicMaterial | null;
+  evidenceDots: THREE.Mesh | null;
+  evidenceDotMaterial: THREE.MeshBasicMaterial | null;
   buildings: THREE.Mesh | null;
   buildingMaterial: THREE.MeshStandardMaterial | null;
   ground: THREE.Mesh | null;
@@ -57,6 +63,7 @@ type VectorLayer = {
   planOutlineObjects: THREE.LineSegments[];
   planOutlineMaterials: THREE.LineBasicMaterial[];
   parcelIdsByTriangle: string[];
+  parcelIdsByOutlineSegment: string[];
 };
 
 type GlobeRuntime = VectorLayer & {
@@ -116,6 +123,11 @@ function disposeVectorLayer(runtime: GlobeRuntime) {
     runtime.outlines.geometry.dispose();
     runtime.outlineMaterial?.dispose();
   }
+  if (runtime.evidenceDots) {
+    runtime.group.remove(runtime.evidenceDots);
+    runtime.evidenceDots.geometry.dispose();
+    runtime.evidenceDotMaterial?.dispose();
+  }
   if (runtime.buildings) {
     runtime.group.remove(runtime.buildings);
     runtime.buildings.geometry.dispose();
@@ -140,6 +152,8 @@ function disposeVectorLayer(runtime: GlobeRuntime) {
   runtime.parcelMaterial = null;
   runtime.outlines = null;
   runtime.outlineMaterial = null;
+  runtime.evidenceDots = null;
+  runtime.evidenceDotMaterial = null;
   runtime.buildings = null;
   runtime.buildingMaterial = null;
   runtime.ground = null;
@@ -149,6 +163,7 @@ function disposeVectorLayer(runtime: GlobeRuntime) {
   runtime.planOutlineObjects = [];
   runtime.planOutlineMaterials = [];
   runtime.parcelIdsByTriangle = [];
+  runtime.parcelIdsByOutlineSegment = [];
 }
 
 function buildPlanOutlineGeometry(geometry: GlobeGeometry, bounds: GlobeBounds, surfaceSpanRadians: number) {
@@ -177,10 +192,32 @@ function buildParcelGeometry(parcels: GlobeParcel[], bounds: GlobeBounds, surfac
   const normals: number[] = [];
   const colours: number[] = [];
   const outlinePositions: number[] = [];
+  const outlineColours: number[] = [];
+  const evidenceDotPositions: number[] = [];
   const parcelIdsByTriangle: string[] = [];
+  const parcelIdsByOutlineSegment: string[] = [];
 
   for (const parcel of parcels) {
     const colour = new THREE.Color(parcel.colour);
+    const outlineColour = new THREE.Color(parcel.outlineColour);
+    const outlineRadius = parcel.outlineColour.toLowerCase() === "#ffffff" ? 1.008 : 1.01;
+    if (parcel.completeDensityEvidence) {
+      const markerPoint = normalisedPoint([parcel.centroidLng, parcel.centroidLat], bounds);
+      const markerRadius = 1.014;
+      const centre = spherePoint(markerPoint.u, markerPoint.v, markerRadius, surfaceSpanRadians);
+      const normal = centre.clone().normalize();
+      const tangent = new THREE.Vector3(0, 1, 0).cross(normal).normalize();
+      const side = normal.clone().cross(tangent).normalize();
+      const dotRadius = 0.004;
+      const segments = 10;
+      for (let segment = 0; segment < segments; segment += 1) {
+        const firstAngle = (segment / segments) * Math.PI * 2;
+        const secondAngle = ((segment + 1) / segments) * Math.PI * 2;
+        const first = centre.clone().addScaledVector(tangent, Math.cos(firstAngle) * dotRadius).addScaledVector(side, Math.sin(firstAngle) * dotRadius).normalize().multiplyScalar(markerRadius);
+        const second = centre.clone().addScaledVector(tangent, Math.cos(secondAngle) * dotRadius).addScaledVector(side, Math.sin(secondAngle) * dotRadius).normalize().multiplyScalar(markerRadius);
+        addTriangle(evidenceDotPositions, centre, first, second);
+      }
+    }
     for (const rawRing of geometryRings(parcel.geometry)) {
       const ring = openRing(rawRing);
       if (ring.length < 3) continue;
@@ -205,9 +242,11 @@ function buildParcelGeometry(parcels: GlobeParcel[], bounds: GlobeBounds, surfac
       for (let index = 0; index < contour.length; index += 1) {
         const current = contour[index];
         const next = contour[(index + 1) % contour.length];
-        const first = spherePoint(current.x, current.y, 1.008, surfaceSpanRadians);
-        const second = spherePoint(next.x, next.y, 1.008, surfaceSpanRadians);
+        const first = spherePoint(current.x, current.y, outlineRadius, surfaceSpanRadians);
+        const second = spherePoint(next.x, next.y, outlineRadius, surfaceSpanRadians);
         outlinePositions.push(first.x, first.y, first.z, second.x, second.y, second.z);
+        outlineColours.push(outlineColour.r, outlineColour.g, outlineColour.b, outlineColour.r, outlineColour.g, outlineColour.b);
+        parcelIdsByOutlineSegment.push(parcel.id);
       }
     }
   }
@@ -220,8 +259,13 @@ function buildParcelGeometry(parcels: GlobeParcel[], bounds: GlobeBounds, surfac
 
   const outlines = new THREE.BufferGeometry();
   outlines.setAttribute("position", new THREE.Float32BufferAttribute(outlinePositions, 3));
+  outlines.setAttribute("color", new THREE.Float32BufferAttribute(outlineColours, 3));
   outlines.computeBoundingSphere();
-  return { geometry, outlines, parcelIdsByTriangle };
+  const evidenceDots = new THREE.BufferGeometry();
+  evidenceDots.setAttribute("position", new THREE.Float32BufferAttribute(evidenceDotPositions, 3));
+  evidenceDots.computeVertexNormals();
+  evidenceDots.computeBoundingSphere();
+  return { geometry, outlines, evidenceDots, parcelIdsByTriangle, parcelIdsByOutlineSegment };
 }
 
 function buildBuildingGeometry(buildings: GlobeBuilding[], bounds: GlobeBounds, surfaceSpanRadians: number) {
@@ -360,7 +404,8 @@ export default function LichterfeldeGlobe({ parcels, buildings, planOutlines, se
       camera, group, renderer, targetRotation,
       parcelMesh: null, parcelMaterial: null, outlines: null, outlineMaterial: null,
       buildings: null, buildingMaterial: null, ground: null, groundMaterial: null,
-      groundOutline: null, groundOutlineMaterial: null, parcelIdsByTriangle: [],
+      groundOutline: null, groundOutlineMaterial: null, evidenceDots: null, evidenceDotMaterial: null,
+      parcelIdsByTriangle: [], parcelIdsByOutlineSegment: [],
       planOutlineObjects: [], planOutlineMaterials: [],
     };
     runtimeRef.current = runtime;
@@ -474,9 +519,14 @@ export default function LichterfeldeGlobe({ parcels, buildings, planOutlines, se
     const parcelMesh = new THREE.Mesh(parcelLayer.geometry, parcelMaterial);
     runtime.group.add(parcelMesh);
 
-    const outlineMaterial = new THREE.LineBasicMaterial({ color: 0xffffff, transparent: true, opacity: 0.78 });
+    const outlineMaterial = new THREE.LineBasicMaterial({ vertexColors: true, transparent: true, opacity: 0.92 });
     const outlines = new THREE.LineSegments(parcelLayer.outlines, outlineMaterial);
     runtime.group.add(outlines);
+
+    const evidenceDotMaterial = new THREE.MeshBasicMaterial({ color: 0x43116f, side: THREE.DoubleSide });
+    const evidenceDots = new THREE.Mesh(parcelLayer.evidenceDots, evidenceDotMaterial);
+    evidenceDots.renderOrder = 4;
+    runtime.group.add(evidenceDots);
 
     const buildingGeometry = buildBuildingGeometry(showBuildings ? buildings : [], bounds, surfaceSpanRadians);
     const buildingMaterial = new THREE.MeshStandardMaterial({ color: 0xf9fbfe, roughness: 0.7, metalness: 0, side: THREE.DoubleSide });
@@ -496,6 +546,8 @@ export default function LichterfeldeGlobe({ parcels, buildings, planOutlines, se
     runtime.parcelMaterial = parcelMaterial;
     runtime.outlines = outlines;
     runtime.outlineMaterial = outlineMaterial;
+    runtime.evidenceDots = evidenceDots;
+    runtime.evidenceDotMaterial = evidenceDotMaterial;
     runtime.buildings = buildingMesh;
     runtime.buildingMaterial = buildingMaterial;
     runtime.ground = ground;
@@ -504,7 +556,8 @@ export default function LichterfeldeGlobe({ parcels, buildings, planOutlines, se
     runtime.groundOutlineMaterial = groundOutlineMaterial;
     runtime.planOutlineObjects = planOutlineObjects;
     runtime.parcelIdsByTriangle = parcelLayer.parcelIdsByTriangle;
-  }, [boundary, bounds, buildings, geometryVersion, planOutlines, showBuildings, surfaceSpanRadians]);
+    runtime.parcelIdsByOutlineSegment = parcelLayer.parcelIdsByOutlineSegment;
+  }, [boundary, bounds, buildings, geometryVersion, parcels, planOutlines, showBuildings, surfaceSpanRadians]);
 
   useEffect(() => {
     const runtime = runtimeRef.current;
@@ -519,7 +572,7 @@ export default function LichterfeldeGlobe({ parcels, buildings, planOutlines, se
 
   useEffect(() => {
     const runtime = runtimeRef.current;
-    if (!runtime?.parcelMesh || runtime.parcelIdsByTriangle.length === 0) return;
+    if (!runtime?.parcelMesh || !runtime.outlines || runtime.parcelIdsByTriangle.length === 0) return;
     const attribute = runtime.parcelMesh.geometry.getAttribute("color") as THREE.BufferAttribute;
     const colours = new Map(parcels.map((parcel) => [parcel.id, new THREE.Color(parcel.colour)]));
     runtime.parcelIdsByTriangle.forEach((parcelId, triangleIndex) => {
@@ -531,6 +584,16 @@ export default function LichterfeldeGlobe({ parcels, buildings, planOutlines, se
       attribute.setXYZ(vertex + 2, colour.r, colour.g, colour.b);
     });
     attribute.needsUpdate = true;
+    const outlineAttribute = runtime.outlines.geometry.getAttribute("color") as THREE.BufferAttribute;
+    const outlineColours = new Map(parcels.map((parcel) => [parcel.id, new THREE.Color(parcel.outlineColour)]));
+    runtime.parcelIdsByOutlineSegment.forEach((parcelId, segmentIndex) => {
+      const colour = outlineColours.get(parcelId);
+      if (!colour) return;
+      const vertex = segmentIndex * 2;
+      outlineAttribute.setXYZ(vertex, colour.r, colour.g, colour.b);
+      outlineAttribute.setXYZ(vertex + 1, colour.r, colour.g, colour.b);
+    });
+    outlineAttribute.needsUpdate = true;
   }, [parcels]);
 
   useEffect(() => {

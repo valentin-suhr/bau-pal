@@ -165,6 +165,26 @@ test("keeps the demo valuation explicitly assumption-driven", async () => {
   assert.match(page, /Indicative development upside/);
 });
 
+test("marks parcels with complete GRZ and GFZ evidence with a purple point layer", async () => {
+  const [page, css, globe] = await Promise.all([readFile(pageUrl, "utf8"), readFile(cssUrl, "utf8"), readFile(globeUrl, "utf8")]);
+  assert.match(page, /const COMPLETE_DENSITY_COLOUR = "#43116f"/);
+  assert.match(page, /parcel\.legalGrz != null && parcel\.legalGfz != null/);
+  assert.match(page, /GRZ \+ GFZ available/);
+  assert.match(page, /completeDensityEvidence,/);
+  assert.match(page, /className="density-evidence-layer"/);
+  assert.match(page, /className="density-evidence-dot"/);
+  assert.match(page, /Show GRZ and GFZ evidence dots/);
+  assert.match(page, /showDensityDots \? <g className="density-evidence-layer"/);
+  assert.match(page, /completeDensityEvidence: showDensityDots && completeDensityEvidence/);
+  assert.match(css, /\.density-evidence-dot \{ fill: #43116f/);
+  assert.match(globe, /outlineColours/);
+  assert.match(globe, /parcel\.completeDensityEvidence/);
+  assert.match(globe, /evidenceDotPositions/);
+  assert.match(globe, /new THREE\.Mesh\(parcelLayer\.evidenceDots/);
+  assert.match(globe, /geometryVersion, parcels, planOutlines/);
+  assert.match(globe, /vertexColors: true/);
+});
+
 test("makes scoped CSV exports self-auditing", async () => {
   const [script, audit] = await Promise.all([readFile(exportScriptUrl, "utf8"), readFile(exportAuditUrl, "utf8")]);
   assert.match(script, /coverageChecks/);

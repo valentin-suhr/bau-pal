@@ -104,6 +104,7 @@ const GLOBE_SURFACE_SPAN_RADIANS = (2 * Math.PI) / GLOBE_CIRCUMFERENCE_RATIO;
 const RESIDENTIAL_MASK_MIN_SHARE = 0.5;
 const PARK_EXCLUSION_MIN_SHARE = 0.01;
 const SHORTLIST_STORAGE_KEY = "baupal-shortlist-v1";
+const COMPLETE_DENSITY_COLOUR = "#43116f";
 const MARKET = {
   landPerSqm: 1100,
   completedPerSqm: 5600,
@@ -222,6 +223,25 @@ function geometryPath(geometry: GeoJSONGeometry, bounds: Bounds | null) {
     .join(" ");
 }
 
+function geometryPoint(longitude: number, latitude: number, bounds: Bounds | null) {
+  if (!bounds) return null;
+  const padding = 24;
+  const centreLatitude = (bounds.north + bounds.south) / 2;
+  const longitudeScale = Math.cos((centreLatitude * Math.PI) / 180);
+  const geographicWidth = Math.max((bounds.east - bounds.west) * longitudeScale, 0.00001);
+  const geographicHeight = Math.max(bounds.north - bounds.south, 0.00001);
+  const scale = Math.min(
+    (WORLD_WIDTH - padding * 2) / geographicWidth,
+    (WORLD_HEIGHT - padding * 2) / geographicHeight,
+  );
+  const renderedWidth = geographicWidth * scale;
+  const renderedHeight = geographicHeight * scale;
+  return {
+    x: (WORLD_WIDTH - renderedWidth) / 2 + (longitude - bounds.west) * longitudeScale * scale,
+    y: (WORLD_HEIGHT - renderedHeight) / 2 + renderedHeight - (latitude - bounds.south) * scale,
+  };
+}
+
 function basePotential(parcel: MapParcel) {
   if (parcel.processingStatus === "vacant") return 1;
   if (parcel.processingStatus === "high_potential") return 0.86;
@@ -252,6 +272,15 @@ function potentialColour(score: number) {
   if (score >= 0.38) return "#ffc54b";
   if (score >= 0.16) return "#ffe394";
   return "#e8edf4";
+}
+
+function hasCompleteDensityEvidence(parcel: MapParcel) {
+  return parcel.legalGrz != null && parcel.legalGfz != null;
+}
+
+function heatMapColour(parcel: MapParcel, score: number, enabled: boolean) {
+  if (enabled) return potentialColour(score);
+  return parcel.processingStatus === "vacant" ? "#ff7a1a" : "#ffc44c";
 }
 
 function globeBaseColour(parcel: MapParcel) {
@@ -308,6 +337,7 @@ export default function Home() {
   const [underutilised, setUnderutilised] = useState(true);
   const [heatMap, setHeatMap] = useState(true);
   const [buildingHeight, setBuildingHeight] = useState(true);
+  const [showDensityDots, setShowDensityDots] = useState(true);
   const [showProcessedPlans, setShowProcessedPlans] = useState(true);
   const [country, setCountry] = useState("Germany");
   const [city, setCity] = useState("Berlin");
@@ -422,6 +452,7 @@ export default function Home() {
 
   const visibleParcels = parcelPaths.filter(({ parcel }) => {
     if (!isInsideResidentialMask(parcel)) return false;
+    if (heatMap && hasCompleteDensityEvidence(parcel)) return true;
     if (parcel.processingStatus === "vacant") return vacantOnly;
     if (parcel.processingStatus === "high_potential" || parcel.processingStatus === "moderate_potential") return underutilised;
     return !vacantOnly && !underutilised;
@@ -433,13 +464,23 @@ export default function Home() {
     const isUnderutilised = parcel.processingStatus === "high_potential" || parcel.processingStatus === "moderate_potential";
     const visible = residentialEligible && ((isVacant && vacantOnly) || (isUnderutilised && underutilised) || (!vacantOnly && !underutilised && !isVacant && !isUnderutilised));
     const score = basePotential(parcel);
-    const opportunityColour = heatMap ? potentialColour(score) : isVacant ? "#ff7a1a" : "#ffc44c";
+    const completeDensityEvidence = hasCompleteDensityEvidence(parcel);
+    const opportunityColour = heatMapColour(parcel, score, heatMap);
     return {
       id: parcel.id,
       geometry: parcel.geometry,
-      colour: selectedId === parcel.id ? "#3b78c1" : visible ? opportunityColour : globeBaseColour(parcel),
+      centroidLng: parcel.centroidLng,
+      centroidLat: parcel.centroidLat,
+      colour: visible || (heatMap && residentialEligible && completeDensityEvidence)
+        ? opportunityColour
+        : globeBaseColour(parcel),
+      outlineColour: selectedId === parcel.id ? "#3b78c1" : "#ffffff",
+      completeDensityEvidence: showDensityDots && completeDensityEvidence,
     };
-  }), [heatMap, parcels, selectedId, underutilised, vacantOnly]);
+  }), [heatMap, parcels, selectedId, showDensityDots, underutilised, vacantOnly]);
+
+  const completeDensityCount = useMemo(() => parcels.filter((parcel) =>
+    isInsideResidentialMask(parcel) && hasCompleteDensityEvidence(parcel)).length, [parcels]);
 
   const globeBuildings = useMemo(() => buildings?.features.map((feature) => ({
     geometry: feature.geometry,
@@ -599,6 +640,7 @@ export default function Home() {
               <label>Underutilised plots <Toggle label="Show underutilised plots" checked={underutilised} onChange={() => setUnderutilised((value) => !value)} /></label>
               <label>Heat map <Toggle label="Show heat map" checked={heatMap} onChange={() => setHeatMap((value) => !value)} /></label>
               <label>Building height <Toggle label="Show building height" checked={buildingHeight} onChange={() => setBuildingHeight((value) => !value)} /></label>
+              <label>GRZ + GFZ evidence <Toggle label="Show GRZ and GFZ evidence dots" checked={showDensityDots} onChange={() => setShowDensityDots((value) => !value)} /></label>
               <label>Processed B-Plan outlines <Toggle label="Show processed B-Plan outlines" checked={showProcessedPlans} onChange={() => {
                 setShowProcessedPlans((value) => !value);
                 if (showProcessedPlans) setSelectedPlanKey(null);
@@ -609,6 +651,10 @@ export default function Home() {
               <div><span>Development potential</span><button title="Potential reflects the vacancy and legal-capacity screening.">i</button></div>
               <div className="gradient" />
               <div className="legend-range"><span>Low</span><span>High</span></div>
+              <div className="complete-density-key">
+                <span aria-hidden="true" />
+                <div><b>GRZ + GFZ available</b><small>Purple dot · {fmt(completeDensityCount)} eligible parcels</small></div>
+              </div>
             </div>
 
           </aside>
@@ -677,7 +723,7 @@ export default function Home() {
                 <g className="parcel-layer">
                   {visibleParcels.map(({ parcel, path }) => {
                     const score = scenarioScore(parcel);
-                    const colour = heatMap ? potentialColour(score) : parcel.processingStatus === "vacant" ? "#ff7a1a" : "#ffc44c";
+                    const colour = heatMapColour(parcel, score, heatMap);
                     return (
                       <path
                         key={parcel.id}
@@ -686,11 +732,21 @@ export default function Home() {
                         style={{ fill: colour }}
                         onClick={(event) => { event.stopPropagation(); setSelectedId(parcel.id); }}
                       >
-                        <title>{`${statusLabels[parcel.processingStatus]} · ${fmt(parcel.areaSqm)} m² · ${fmt(parcel.remainingFloorAreaSqm)} m² remaining GFA`}</title>
+                        <title>{`${statusLabels[parcel.processingStatus]} · ${fmt(parcel.areaSqm)} m² · ${fmt(parcel.remainingFloorAreaSqm)} m² remaining GFA${hasCompleteDensityEvidence(parcel) ? ` · GRZ ${fmt(parcel.legalGrz, 2)} · GFZ ${fmt(parcel.legalGfz, 2)}` : ""}`}</title>
                       </path>
                     );
                   })}
                 </g>
+                {showDensityDots ? <g className="density-evidence-layer" aria-label="Parcels with complete GRZ and GFZ evidence">
+                  {visibleParcels.filter(({ parcel }) => hasCompleteDensityEvidence(parcel)).map(({ parcel }) => {
+                    const point = geometryPoint(parcel.centroidLng, parcel.centroidLat, bounds);
+                    return point ? (
+                      <circle key={`density-${parcel.id}`} className="density-evidence-dot" cx={point.x} cy={point.y} r="2.2">
+                        <title>{`GRZ ${fmt(parcel.legalGrz, 2)} · GFZ ${fmt(parcel.legalGfz, 2)}`}</title>
+                      </circle>
+                    ) : null;
+                  })}
+                </g> : null}
                 {showProcessedPlans ? (
                   <g className="processed-plan-layer" aria-label="Processed B-Plan outlines">
                     {processedPlanPaths.map(({ plan, path }) => (
