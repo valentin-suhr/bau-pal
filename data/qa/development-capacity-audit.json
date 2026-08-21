@@ -1,6 +1,6 @@
 {
   "generatedAt": "2026-08-15T09:47:19.209Z",
-  "database": "/Users/valentinsuhr/Documents/Competition/baugruppe-dashboard/.wrangler/state/v3/d1/miniflare-D1DatabaseObject/faaf2b0445ab934c3aac48ddf0cdfade8f9bac050be98993748742cdd2cb05fb.sqlite",
+  "database": ".wrangler/state/v3/d1/miniflare-D1DatabaseObject/faaf2b0445ab934c3aac48ddf0cdfade8f9bac050be98993748742cdd2cb05fb.sqlite",
   "scope": {
     "borough": "Steglitz-Zehlendorf",
     "locality": "Lichterfelde"

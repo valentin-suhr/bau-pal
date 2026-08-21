@@ -1,0 +1,9 @@
+# Keep generated evidence payloads from overwhelming GitHub language statistics.
+data/import/*.sql linguist-generated=true
+data/qa/*.json linguist-generated=true
+drizzle/meta/*.json linguist-generated=true
+public/data/*.geojson linguist-generated=true
+public/data/*.json linguist-generated=true
+
+# Make notebooks visible as intentional portfolio artifacts.
+analysis/*.ipynb linguist-detectable=true

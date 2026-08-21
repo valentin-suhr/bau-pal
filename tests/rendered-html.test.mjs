@@ -167,7 +167,6 @@ test("keeps the demo valuation explicitly assumption-driven", async () => {
 
 test("marks parcels with complete GRZ and GFZ evidence with a purple point layer", async () => {
   const [page, css, globe] = await Promise.all([readFile(pageUrl, "utf8"), readFile(cssUrl, "utf8"), readFile(globeUrl, "utf8")]);
-  assert.match(page, /const COMPLETE_DENSITY_COLOUR = "#43116f"/);
   assert.match(page, /parcel\.legalGrz != null && parcel\.legalGfz != null/);
   assert.match(page, /GRZ \+ GFZ available/);
   assert.match(page, /completeDensityEvidence,/);

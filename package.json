@@ -1,7 +1,16 @@
 {
   "name": "bau-pal",
   "version": "0.1.0",
+  "description": "An evidence-aware parcel screening dashboard for cohousing and group-build projects in Berlin.",
   "private": true,
+  "keywords": [
+    "berlin",
+    "cohousing",
+    "gis",
+    "urban-planning",
+    "threejs",
+    "alkis"
+  ],
   "engines": {
     "node": ">=22.13.0"
   },

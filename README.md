@@ -1,8 +1,94 @@
-# Grounded Berlin parcel intelligence
+# bau pal
 
-Grounded is a Berlin parcel-screening dashboard for cohousing and group-build
-projects. The application separates official cadastral facts from planning-law
-interpretation and from contextual estimates.
+**Find potential. Build together.**
+
+bau pal is an evidence-aware parcel screening prototype for cohousing and
+group-build projects. The current MVP focuses on Lichterfelde, Berlin: it maps
+vacant and underused residential candidates, visualises indicative development
+potential, and clearly distinguishes sourced planning values from estimates.
+
+![bau pal — Lichterfelde parcel intelligence](public/og.png)
+
+## Portfolio highlights
+
+- Interactive 2D map and a custom Three.js “micro-globe” representation.
+- Parcel-level heat map for vacancy and underutilisation screening.
+- Filterable purple point layer for parcels with both GRZ and GFZ evidence.
+- ALKIS parcels and buildings combined with QGIS-derived residential, street,
+  park and public-space screens.
+- Clickable processed B-Plan scopes with source links and plan identifiers.
+- Parcel results, indicative capacity, Google Maps links and a local shortlist.
+- Reproducible OCR/georeferencing experiments for raster B-Plans, including
+  local and Google Colab workflows.
+- Deterministic QA checks that prevent non-building land from becoming a
+  development candidate.
+
+## Demo scope
+
+This repository includes a self-contained Lichterfelde demo snapshot, so the
+main interface can run without a database or private credentials. It is a
+screening and research prototype—not a planning permission, valuation, vacancy
+register or legal opinion. Values labelled as estimates are deliberately kept
+separate from official or manually reviewed evidence.
+
+## Run locally
+
+Requirements: Node.js 22.13 or newer and npm.
+
+```bash
+git clone <your-github-repository-url>
+cd baugruppe-dashboard
+npm ci
+npm run dev
+```
+
+Open [http://localhost:3000](http://localhost:3000). Validate a change with:
+
+```bash
+npm run lint
+npm test
+```
+
+## Architecture at a glance
+
+```text
+Berlin open geodata + reviewed B-Plans + QGIS layers
+                         │
+              import / spatial QA scripts
+                         │
+         normalised D1 evidence and planning model
+                         │
+          bounded, database-independent demo assets
+                         │
+        React/vinext dashboard + Three.js micro-globe
+```
+
+See [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md) for component boundaries and
+[docs/DATA_AND_LIMITATIONS.md](docs/DATA_AND_LIMITATIONS.md) for provenance,
+confidence and interpretation rules.
+
+## Technology
+
+React 19 · TypeScript · vinext/Vite · Three.js · Cloudflare D1/Drizzle ·
+GeoJSON · Node.js spatial ETL · Python/Colab OCR experiments
+
+## Repository map
+
+| Path | Purpose |
+| --- | --- |
+| `app/` | Dashboard UI and parcel APIs |
+| `components/` | Interactive Three.js Lichterfelde globe |
+| `public/data/` | Bounded, deployable Lichterfelde demo assets |
+| `db/`, `drizzle/` | Normalised evidence and planning schema |
+| `scripts/` | Import, spatial assignment, extraction and QA workflows |
+| `pipeline/` | Raster B-Plan OCR/vectorisation prototype |
+| `analysis/` | Reproducible Colab notebooks and analysis helpers |
+| `tests/` | UI contracts and geospatial data-quality checks |
+
+## Technical reference
+
+The remainder of this document records the detailed parcel-data and B-Plan
+processing workflow behind the prototype.
 
 ## Parcel data model
 
@@ -309,17 +395,19 @@ as contextual candidates and never written into legal profile fields.
 
 - Node.js `>=22.13.0`
 
-## Quick Start
+## Detailed local setup
 
 ```bash
-npm install
+npm ci
 npm run dev
 npm run build
 ```
 
-This starter does not use `wrangler.jsonc`.
+The public Lichterfelde snapshot powers the portfolio demo without external
+services. Database-backed API development additionally uses the optional D1
+bindings declared in `.openai/hosting.json` and simulated by `vite.config.ts`.
 
-## Included Shape
+## Included project structure
 
 - edit site code under `app/`
 - `.openai/hosting.json` declares optional Sites D1 and R2 bindings
@@ -328,69 +416,12 @@ This starter does not use `wrangler.jsonc`.
 - `examples/d1/` contains an optional D1 example surface
 - `drizzle.config.ts` supports local migration generation when needed
 
-## Workspace Auth Headers
-
-OpenAI workspace sites can read the current user's email from
-`oai-authenticated-user-email`.
-
-SIWC-authenticated workspace sites may also receive
-`oai-authenticated-user-full-name` when the user's SIWC profile has a non-empty
-`name` claim. The full-name value is percent-encoded UTF-8 and is accompanied by
-`oai-authenticated-user-full-name-encoding: percent-encoded-utf-8`.
-
-Treat the full name as optional and fall back to email when it is absent:
-
-```tsx
-import { headers } from "next/headers";
-
-export default async function Home() {
-  const requestHeaders = await headers();
-  const email = requestHeaders.get("oai-authenticated-user-email");
-  const encodedFullName = requestHeaders.get("oai-authenticated-user-full-name");
-  const fullName =
-    encodedFullName &&
-    requestHeaders.get("oai-authenticated-user-full-name-encoding") ===
-      "percent-encoded-utf-8"
-      ? decodeURIComponent(encodedFullName)
-      : null;
-
-  const displayName = fullName ?? email;
-  // ...
-}
-```
-
-## Optional Dispatch-Owned ChatGPT Sign-In
-
-Import the ready-to-use helpers from `app/chatgpt-auth.ts` when the site needs
-optional or required ChatGPT sign-in:
-
-- Use `getChatGPTUser()` for optional signed-in UI.
-- Use `requireChatGPTUser(returnTo)` for server-rendered pages that should send
-  anonymous visitors through Sign in with ChatGPT.
-- Use `chatGPTSignInPath(returnTo)` and `chatGPTSignOutPath(returnTo)` for
-  browser links or actions.
-- Pass a same-origin relative `returnTo` path for the destination after sign-in
-  or sign-out. The helper validates and safely encodes it.
-- Mark protected pages with `export const dynamic = "force-dynamic"` because
-  they depend on per-request identity headers.
-
-Dispatch owns `/signin-with-chatgpt`, `/signout-with-chatgpt`, `/callback`, the
-OAuth cookies, and identity header injection. Do not implement app routes for
-those reserved paths. Routes that do not import and call the helper remain
-anonymous-compatible.
-
-SIWC establishes identity only; it does not prove workspace membership. Use the
-Sites hosting platform's access policy controls for workspace-wide restrictions,
-or enforce explicit server-side membership or allowlist checks.
-
-Use SIWC for account pages, user-specific dashboards, saved records, and write
-actions tied to the current ChatGPT user. Leave public content anonymous.
-
 ## Useful Commands
 
 - `npm run dev`: start local development
 - `npm run build`: verify the vinext build output
-- `npm test`: build the starter and verify its rendered loading skeleton
+- `npm test`: build the app and run UI plus QGIS land-use contracts
+- `npm run lint`: check TypeScript, React and script quality
 - `npm run db:generate`: generate Drizzle migrations after schema changes
 - `npm run test:data`: validate ALKIS and B-Plan normalisation
 - `npm run build:bplan-raster-gis-bulk-notebook`: rebuild the restart-safe Colab notebook for sequential multi-plan OCR, clustering, reviewed georeferencing and candidate GIS export
@@ -399,3 +430,8 @@ actions tied to the current ChatGPT user. Leave public content anonymous.
 
 - [vinext Documentation](https://github.com/cloudflare/vinext)
 - [Drizzle D1 Guide](https://orm.drizzle.team/docs/get-started/d1-new)
+
+## License
+
+No open-source licence has been selected yet. The repository can be shown as a
+portfolio project, but reuse rights remain reserved until a licence is added.

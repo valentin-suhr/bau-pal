@@ -1,6 +1,6 @@
 {
   "generatedAt": "2026-08-01T16:21:10.400Z",
-  "sourceQueue": "/Users/valentinsuhr/Documents/Competition/baugruppe-dashboard/data/qa/bplan-zone-review-queue.json",
+  "sourceQueue": "data/qa/bplan-zone-review-queue.json",
   "methodology": "OCR triage only: values from 15000 through 35000 are grouped into runs spaced exactly 100 units. Two runs of at least three labels indicate an unreviewed two-axis coordinate sequence, not proof of a machine-detectable grid: axis identity, line geometry, rotation, crop, labels and the legal sheet all require visual validation.",
   "summary": {
     "manual_reviewed_requires_internal_zone_trace": 20,

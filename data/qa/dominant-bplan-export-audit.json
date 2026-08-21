@@ -1,5 +1,5 @@
 {
-  "archive": "/Users/valentinsuhr/Documents/Competition/baugruppe-dashboard/data/exports/berlin-parcels.csv.gz",
+  "archive": "data/exports/berlin-parcels.csv.gz",
   "rows": 403484,
   "dominantRows": 4,
   "mixedRows": 3,

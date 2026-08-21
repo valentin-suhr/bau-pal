@@ -104,7 +104,6 @@ const GLOBE_SURFACE_SPAN_RADIANS = (2 * Math.PI) / GLOBE_CIRCUMFERENCE_RATIO;
 const RESIDENTIAL_MASK_MIN_SHARE = 0.5;
 const PARK_EXCLUSION_MIN_SHARE = 0.01;
 const SHORTLIST_STORAGE_KEY = "baupal-shortlist-v1";
-const COMPLETE_DENSITY_COLOUR = "#43116f";
 const MARKET = {
   landPerSqm: 1100,
   completedPerSqm: 5600,
@@ -408,17 +407,23 @@ export default function Home() {
   }, []);
 
   useEffect(() => {
+    let active = true;
     try {
       const stored = window.localStorage.getItem(SHORTLIST_STORAGE_KEY);
       const parsed = stored ? JSON.parse(stored) : [];
-      if (Array.isArray(parsed)) {
-        setShortlistIds(parsed.filter((id): id is string => typeof id === "string"));
-      }
+      const storedIds = Array.isArray(parsed)
+        ? parsed.filter((id): id is string => typeof id === "string")
+        : [];
+      queueMicrotask(() => {
+        if (!active) return;
+        setShortlistIds(storedIds);
+        setShortlistLoaded(true);
+      });
     } catch {
       // Keep the in-memory shortlist available when browser storage is blocked.
-    } finally {
-      setShortlistLoaded(true);
+      queueMicrotask(() => active && setShortlistLoaded(true));
     }
+    return () => { active = false; };
   }, []);
 
   useEffect(() => {

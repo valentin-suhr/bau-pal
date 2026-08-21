@@ -1,7 +1,7 @@
 {
   "generatedAt": "2026-08-01T17:27:49.500Z",
-  "database": "/Users/valentinsuhr/Documents/Competition/baugruppe-dashboard/.wrangler/state/v3/d1/miniflare-D1DatabaseObject/faaf2b0445ab934c3aac48ddf0cdfade8f9bac050be98993748742cdd2cb05fb.sqlite",
-  "manualDispositionSource": "/Users/valentinsuhr/Documents/Competition/baugruppe-dashboard/data/qa/bplan-manual-review-dispositions.json",
+  "database": ".wrangler/state/v3/d1/miniflare-D1DatabaseObject/faaf2b0445ab934c3aac48ddf0cdfade8f9bac050be98993748742cdd2cb05fb.sqlite",
+  "manualDispositionSource": "data/qa/bplan-manual-review-dispositions.json",
   "manualDispositionCount": 26,
   "planCount": 2054,
   "summary": {
