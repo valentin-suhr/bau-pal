@@ -6,7 +6,7 @@ export async function generateMetadata(): Promise<Metadata> {
   const requestHeaders = await headers();
   const host = requestHeaders.get("x-forwarded-host") ?? requestHeaders.get("host") ?? "localhost:3000";
   const protocol = requestHeaders.get("x-forwarded-proto") ?? (host.startsWith("localhost") ? "http" : "https");
-  const image = `${protocol}://${host}/og.png`;
+  const image = `${protocol}://${host}/baupal-header.png`;
   const title = "bau pal — Find potential. Build together.";
   const description = "Explore vacant and underutilised plots in Lichterfelde using parcel-level planning and development-capacity evidence.";
 

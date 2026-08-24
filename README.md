@@ -9,7 +9,7 @@ group-build projects. The current MVP focuses on Lichterfelde, Berlin: it maps
 vacant and underused residential candidates, visualises indicative development
 potential, and clearly distinguishes sourced planning values from estimates.
 
-![bau pal — Lichterfelde parcel intelligence](public/og.png)
+![bau pal — cohousing project team](public/baupal-header.png)
 
 ## Portfolio highlights
 
