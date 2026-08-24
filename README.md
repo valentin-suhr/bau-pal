@@ -36,8 +36,8 @@ separate from official or manually reviewed evidence.
 Requirements: Node.js 22.13 or newer and npm.
 
 ```bash
-git clone <your-github-repository-url>
-cd baugruppe-dashboard
+git clone https://github.com/valentin-suhr/bau-pal.git
+cd bau-pal
 npm ci
 npm run dev
 ```

@@ -2,6 +2,11 @@
   "name": "bau-pal",
   "version": "0.1.0",
   "description": "An evidence-aware parcel screening dashboard for cohousing and group-build projects in Berlin.",
+  "homepage": "https://github.com/valentin-suhr/bau-pal#readme",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/valentin-suhr/bau-pal.git"
+  },
   "private": true,
   "keywords": [
     "berlin",
