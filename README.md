@@ -1,5 +1,7 @@
 # bau pal
 
+[![CI](https://github.com/valentin-suhr/bau-pal/actions/workflows/ci.yml/badge.svg)](https://github.com/valentin-suhr/bau-pal/actions/workflows/ci.yml)
+
 **Find potential. Build together.**
 
 bau pal is an evidence-aware parcel screening prototype for cohousing and
